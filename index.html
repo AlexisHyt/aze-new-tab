@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aze New Tab</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Monda:wght@400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <script src="ext/googlefonts.js"></script>
+
+    <link rel="stylesheet" href="main.css">
+    <script type="module" src="main.js"></script>
+</head>
+
+<body>
+<main class="wrapper">
+
+    <!-- Dialogs -->
+    <dialog id="add-dialog">
+        <p>Add Link</p>
+        <form id="add-form">
+            <label for="title">Title:</label><input id="title" type="text" placeholder="Title" required />
+            <label for="url">Url:</label><input id="url" type="text" placeholder="URL" required />
+            <label for="image">Image (optional):</label><input id="image" type="text" placeholder="Image" />
+            <button type="submit">Add</button>
+        </form>
+        <button id="close-dialog" class="close-dialog">✖</button>
+    </dialog>
+    <dialog id="add-cat-dialog">
+        <p>Add Category</p>
+        <form id="add-cat-form">
+            <label for="cat-title">Title:</label><input id="cat-title" type="text" placeholder="Title" required />
+            <button type="submit">Add</button>
+        </form>
+        <button id="close-cat-dialog" class="close-dialog">✖</button>
+    </dialog>
+
+    <!-- Content -->
+    <div id="left">
+        <p id="time" class="time"></p>
+        <div id="categories-link" class="categories"></div>
+        <div id="create-category">Create category</div>
+    </div>
+    <div id="right" class="rss-wrapper">
+        <div id="rss-img-wrapper">
+            <img id="rss-img" src="" alt="" />
+        </div>
+        <div id="rss-feed" class="rss">
+            DevTo
+        </div>
+    </div>
+
+</main>
+</body>
+
+</html>

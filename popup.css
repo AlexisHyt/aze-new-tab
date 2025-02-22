@@ -1,0 +1,91 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 350px;
+    padding: 10px 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+.header img {
+    height: 50px;
+}
+.header h1 {
+}
+
+/* Updated for the new structure */
+.settings-group {
+    margin-bottom: 40px;
+}
+
+form {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input, select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    width: 100%;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+    background: #007bff;
+    color: white;
+    margin-left: 8px;
+    white-space: nowrap;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* For links and additional content */
+.settings-group a {
+    display: inline-block;
+    margin-top: 5px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.settings-group a:hover {
+    text-decoration: underline;
+}
+
+/* Checkbox specific styling */
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+.checkbox-label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
