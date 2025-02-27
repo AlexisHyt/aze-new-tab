@@ -94,12 +94,14 @@ function addEventListeners() {
  * @param {Event} event - Click event
  */
 async function handleAddLink(event) {
+  const uid = guidGenerator();
   const category = event.currentTarget.getAttribute("data-category");
   const dialog = document.getElementById("add-dialog");
   const form = document.getElementById("add-form");
-  const titleInput = document.getElementById("title");
-  const urlInput = document.getElementById("url");
-  const imageInput = document.getElementById("image");
+  const titleInput = form.querySelector("#title");
+  const urlInput = form.querySelector("#url");
+  const imageInput = form.querySelector("#image");
+  const hideTitleInput = form.querySelector("#hideTitle");
 
   // Show dialog
   dialog.showModal();
@@ -109,6 +111,7 @@ async function handleAddLink(event) {
     const title = titleInput.value.trim();
     const url = urlInput.value.trim();
     let image = imageInput.value.trim();
+    const hideTitle = !!hideTitleInput.checked;
 
     if (!title || !url) return;
 
@@ -123,9 +126,11 @@ async function handleAddLink(event) {
       }
 
       links[category].push({
-        img: image || 'default-icon.png',
+        uid: uid,
+        img: image,
         link: url,
-        text: title
+        text: title,
+        hideTitle: hideTitle,
       });
 
       await setStorageData(links, STORAGE_KEY);
@@ -152,17 +157,17 @@ async function handleDeleteItem(event) {
   event.preventDefault();
   event.stopPropagation();
 
-  const itemText = event.currentTarget.getAttribute("data-item-text");
+  const itemUid = event.currentTarget.getAttribute("data-item-uid");
   const categoryEl = event.currentTarget.closest('.category');
   const categoryTitleEl = categoryEl.previousElementSibling;
 
   if (categoryTitleEl && categoryTitleEl.classList.contains('category-title')) {
-    const categoryName = categoryTitleEl.textContent;
+    const categoryName = categoryTitleEl.textContent.trim().replaceAll('✖', '');
 
     try {
       const links = await getStorageData(STORAGE_KEY);
       if (links[categoryName]) {
-        links[categoryName] = links[categoryName].filter(item => item.text !== itemText);
+        links[categoryName] = links[categoryName].filter(item => item.uid !== itemUid);
         await setStorageData(links, STORAGE_KEY);
         await getCategories();
       }
@@ -232,3 +237,20 @@ async function handleDeleteCategory(event) {
     }
   }
 }
+
+function guidGenerator() {
+  const S4 = function () {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  };
+  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
+setTimeout(() => {
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if( request.message === "cardLinkShowTitleChanged" ) {
+        getCategories();
+      }
+    }
+  );
+}, 1000)

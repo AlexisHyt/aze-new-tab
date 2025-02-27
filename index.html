@@ -24,9 +24,10 @@
     <dialog id="add-dialog">
         <p>Add Link</p>
         <form id="add-form">
-            <label for="title">Title:</label><input id="title" type="text" placeholder="Title" required />
+            <label for="title">Title:</label><input id="title" type="text" placeholder="Title" required autofocus />
             <label for="url">Url:</label><input id="url" type="text" placeholder="URL" required />
             <label for="image">Image (optional):</label><input id="image" type="text" placeholder="Image" />
+            <label for="hideTitle">Hide title: </label><input id="hideTitle" type="checkbox" />
             <button type="submit">Add</button>
         </form>
         <button id="close-dialog" class="close-dialog">✖</button>
@@ -34,7 +35,7 @@
     <dialog id="add-cat-dialog">
         <p>Add Category</p>
         <form id="add-cat-form">
-            <label for="cat-title">Title:</label><input id="cat-title" type="text" placeholder="Title" required />
+            <label for="cat-title">Title:</label><input id="cat-title" type="text" placeholder="Title" required autofocus />
             <button type="submit">Add</button>
         </form>
         <button id="close-cat-dialog" class="close-dialog">✖</button>

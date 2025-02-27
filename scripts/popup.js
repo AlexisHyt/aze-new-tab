@@ -6,11 +6,28 @@ import {
   MAIN_COLOR,
   RSS_URL,
   setStorageData,
-  getStorageData, CLOCK_SHOW_SECONDS
+  getStorageData,
+  CLOCK_SHOW_SECONDS,
+  CATEGORY_COLOR,
+  CARD_LINK_BG_COLOR,
+  CARD_LINK_TEXT_COLOR,
+  RSS_BG_COLOR,
+  RSS_TITLE_COLOR, RSS_DATE_COLOR, CLOCK_COLOR, CARD_LINK_SHOW_TITLE
 } from "./storage.js";
+
+/*
+TODO:
+Save/load presets
+ */
 
 // Enhanced configuration object that defines all settings
 const settingsConfig = [
+  {
+    id: 'bgTitle',
+    label: 'Background',
+    isTitle: true,
+    hideLabel: true
+  },
   {
     id: 'background',
     label: 'Background Image',
@@ -21,13 +38,25 @@ const settingsConfig = [
     messageType: 'backgroundChanged'
   },
   {
+    id: 'fontTitle',
+    label: 'Font',
+    isTitle: true,
+    hideLabel: true
+  },
+  {
     id: 'font',
-    label: 'Family Name',
+    label: 'Google Font Family Name',
     inputType: 'text',
     inputName: 'name',
-    placeholder: 'Font Family Name',
+    placeholder: 'Google Font Family Name',
     storageKey: FONT_FAMILY_KEY,
     messageType: 'fontChanged'
+  },
+  {
+    id: 'rssTitle',
+    label: 'RSS',
+    isTitle: true,
+    hideLabel: true
   },
   {
     id: 'rss',
@@ -40,24 +69,36 @@ const settingsConfig = [
     extraHtml: '<a href="https://github.com/plenaryapp/awesome-rss-feeds?tab=readme-ov-file" target="_blank">See here for RSS urls</a>'
   },
   {
-    id: 'color-main',
-    label: 'Color',
+    id: 'color-rss-bg',
+    label: 'RSS Background Color',
     inputType: 'text',
     inputName: 'color',
-    placeholder: 'Main Color (Ex: #ff0000)',
-    storageKey: MAIN_COLOR,
-    messageType: 'mainColorChanged',
-    groupId: 'color-group'
+    placeholder: 'RSS Background Color (Ex: #ff0000)',
+    storageKey: RSS_BG_COLOR,
+    messageType: 'rssBgColorChanged',
   },
   {
-    id: 'color-accent',
-    label: 'Accent Color',
+    id: 'color-rss-title',
+    label: 'RSS Title Color',
     inputType: 'text',
     inputName: 'color',
-    placeholder: 'Accent Color (Ex: #ff0000)',
-    storageKey: ACCENT_COLOR,
-    messageType: 'accentColorChanged',
-    groupId: 'color-group',
+    placeholder: 'RSS Title Color (Ex: #ff0000)',
+    storageKey: RSS_TITLE_COLOR,
+    messageType: 'rssTitleColorChanged',
+  },
+  {
+    id: 'color-rss-date',
+    label: 'RSS Date Color',
+    inputType: 'text',
+    inputName: 'color',
+    placeholder: 'RSS Date Color (Ex: #ff0000)',
+    storageKey: RSS_DATE_COLOR,
+    messageType: 'rssDateColorChanged',
+  },
+  {
+    id: 'clockTitle',
+    label: 'Clock',
+    isTitle: true,
     hideLabel: true
   },
   {
@@ -80,6 +121,84 @@ const settingsConfig = [
     checkboxLabel: '',
     storageKey: CLOCK_SHOW_SECONDS,
     messageType: 'clockShowSecondsChanged'
+  },
+  {
+    id: 'color-clock-color',
+    label: 'Clock Text Color',
+    inputType: 'text',
+    inputName: 'color',
+    placeholder: 'Clock Text Color (Ex: #ff0000)',
+    storageKey: CLOCK_COLOR,
+    messageType: 'clockColorChanged'
+  },
+  {
+    id: 'colorTitle',
+    label: 'Colors',
+    isTitle: true,
+    hideLabel: true
+  },
+  {
+    id: 'color-main',
+    label: 'Color',
+    inputType: 'text',
+    inputName: 'color',
+    placeholder: 'Main Color (Ex: #ff0000)',
+    storageKey: MAIN_COLOR,
+    messageType: 'mainColorChanged'
+  },
+  {
+    id: 'color-accent',
+    label: 'Accent Color',
+    inputType: 'text',
+    inputName: 'color',
+    placeholder: 'Accent Color (Ex: #ff0000)',
+    storageKey: ACCENT_COLOR,
+    messageType: 'accentColorChanged'
+  },
+  {
+    id: 'color-category',
+    label: 'Categories Name Color',
+    inputType: 'text',
+    inputName: 'color',
+    placeholder: 'Categories Name Color (Ex: #ff0000)',
+    storageKey: CATEGORY_COLOR,
+    messageType: 'categoryColorChanged'
+  },
+  {
+    id: 'color-card-link-bg',
+    label: 'Link Card Background Color',
+    inputType: 'text',
+    inputName: 'color',
+    placeholder: 'Link Card Background Color (Ex: #ff0000)',
+    storageKey: CARD_LINK_BG_COLOR,
+    messageType: 'cardLinkBgColorChanged'
+  },
+  {
+    id: 'color-card-link-text',
+    label: 'Link Card Text Color',
+    inputType: 'text',
+    inputName: 'color',
+    placeholder: 'Link Card Text Color (Ex: #ff0000)',
+    storageKey: CARD_LINK_TEXT_COLOR,
+    messageType: 'cardLinkTextColorChanged',
+  },
+  {
+    id: 'color-card-link-show-title',
+    label: 'Link Card Show Title',
+    inputType: 'text',
+    inputName: 'showTitle',
+    placeholder: 'Link Card Text Color (Ex: #ff0000)',
+    storageKey: CARD_LINK_TEXT_COLOR,
+    messageType: 'cardLinkTextColorChanged',
+  },
+  {
+    id: 'color-card-link-show-title',
+    label: 'Link Card Show Title',
+    inputType: 'checkbox',
+    inputName: 'showTitle',
+    checkboxLabel: '',
+    storageKey: CARD_LINK_SHOW_TITLE,
+    messageType: 'cardLinkShowTitleChanged'
   }
 ];
 
@@ -121,54 +240,63 @@ const generateSettingsHTML = () => {
 
     // Add each setting form to the group
     settings.forEach(setting => {
-      const form = document.createElement('form');
-      form.id = `form-${setting.id}`;
-
-      if (setting.inputType === 'select') {
-        const select = document.createElement('select');
-        select.name = setting.inputName;
-        select.id = `form-${setting.id}--${setting.inputName}`;
-
-        setting.options.forEach(option => {
-          const optionEl = document.createElement('option');
-          optionEl.value = option.value;
-          optionEl.textContent = option.label;
-          select.appendChild(optionEl);
-        });
-
-        form.appendChild(select);
-      } else if (setting.inputType === 'checkbox') {
-        const checkboxWrapper = document.createElement('div');
-        checkboxWrapper.className = 'checkbox-wrapper';
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.name = setting.inputName;
-        checkbox.id = `form-${setting.id}--${setting.inputName}`;
-
-        const checkboxLabel = document.createElement('label');
-        checkboxLabel.htmlFor = checkbox.id;
-        checkboxLabel.textContent = setting.checkboxLabel || '';
-        checkboxLabel.className = 'checkbox-label';
-
-        checkboxWrapper.appendChild(checkbox);
-        checkboxWrapper.appendChild(checkboxLabel);
-        form.appendChild(checkboxWrapper);
-      } else {
-        const input = document.createElement('input');
-        input.type = setting.inputType;
-        input.name = setting.inputName;
-        input.id = `form-${setting.id}--${setting.inputName}`;
-        input.placeholder = setting.placeholder;
-        form.appendChild(input);
+      if (setting.isTitle) {
+        const title = document.createElement('h2');
+        title.textContent = setting.label;
+        groupDiv.appendChild(title);
       }
+      else {
+        const form = document.createElement('form');
+        form.id = `form-${setting.id}`;
 
-      const button = document.createElement('button');
-      button.type = 'submit';
-      button.textContent = 'Change';
-      form.appendChild(button);
+        if (setting.inputType === 'select') {
+          const select = document.createElement('select');
+          select.name = setting.inputName;
+          select.id = `form-${setting.id}--${setting.inputName}`;
 
-      groupDiv.appendChild(form);
+          setting.options.forEach(option => {
+            const optionEl = document.createElement('option');
+            optionEl.value = option.value;
+            optionEl.textContent = option.label;
+            select.appendChild(optionEl);
+          });
+
+          form.appendChild(select);
+        }
+        else if (setting.inputType === 'checkbox') {
+          const checkboxWrapper = document.createElement('div');
+          checkboxWrapper.className = 'checkbox-wrapper';
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.name = setting.inputName;
+          checkbox.id = `form-${setting.id}--${setting.inputName}`;
+
+          const checkboxLabel = document.createElement('label');
+          checkboxLabel.htmlFor = checkbox.id;
+          checkboxLabel.textContent = setting.checkboxLabel || '';
+          checkboxLabel.className = 'checkbox-label';
+
+          checkboxWrapper.appendChild(checkbox);
+          checkboxWrapper.appendChild(checkboxLabel);
+          form.appendChild(checkboxWrapper);
+        }
+        else {
+          const input = document.createElement('input');
+          input.type = setting.inputType;
+          input.name = setting.inputName;
+          input.id = `form-${setting.id}--${setting.inputName}`;
+          input.placeholder = setting.placeholder;
+          form.appendChild(input);
+        }
+
+        const button = document.createElement('button');
+        button.type = 'submit';
+        button.textContent = 'Change';
+        form.appendChild(button);
+
+        groupDiv.appendChild(form);
+      }
     });
 
     // Add any extra HTML
@@ -199,7 +327,11 @@ const setupFormHandlers = () => {
         if (setting.inputType === 'checkbox') {
           input.checked = value === 'true' || value === true;
         } else {
-          input.value = value;
+          if (typeof value === 'object') {
+            input.value = "";
+          } else {
+            input.value = value;
+          }
         }
       }
     });

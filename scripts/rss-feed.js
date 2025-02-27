@@ -45,8 +45,12 @@ export async function fetchRSSFeed(url) {
       article.classList.add("rss-card");
       article.innerHTML = `
         <h3><a href="${link}" target="_blank">${title}</a></h3>
-        <span class="rss-date">${pubDate}</span>
       `;
+      if (pubDate) {
+        article.innerHTML += `
+          <span class="rss-date">${pubDate}</span>
+        `;
+      }
 
       container.appendChild(article);
     });

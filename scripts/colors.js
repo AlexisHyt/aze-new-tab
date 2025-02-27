@@ -1,41 +1,53 @@
 // font.js - Font manager
 
-import {ACCENT_COLOR, FONT_FAMILY_KEY, getStorageData, MAIN_COLOR} from "./storage.js";
+import {
+  ACCENT_COLOR,
+  CARD_LINK_BG_COLOR, CARD_LINK_TEXT_COLOR,
+  CATEGORY_COLOR,
+  getStorageData,
+  MAIN_COLOR, RSS_BG_COLOR, RSS_DATE_COLOR, RSS_TITLE_COLOR
+} from "./storage.js";
 
-export async function setMainColor(color) {
-  document.body.style.setProperty("--main-color", color);
-}
-export async function setAccentColor(color) {
-  document.body.style.setProperty("--accent-color", color);
+export async function setColor(property, color) {
+  document.body.style.setProperty(property, color);
 }
 
-export async function updateMainColors() {
-  let mainColor = await getStorageData(MAIN_COLOR);
-  if (!mainColor || Object.keys(mainColor).length === 0) {
-    mainColor = '#fff';
+export async function updateColor(key, property, defaultColor = "#fff") {
+  let color = await getStorageData(key);
+  if (!color || Object.keys(color).length === 0) {
+    color = defaultColor;
   }
-  await setMainColor(mainColor);
-}
-export async function updateAccentColors() {
-  let accentColor = await getStorageData(ACCENT_COLOR);
-  if (!accentColor || Object.keys(accentColor).length === 0) {
-    accentColor = '#000';
-  }
-  await setAccentColor(accentColor);
+  await setColor(property, color);
 }
 
 setTimeout(() => {
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-      if( request.message === "mainColorChanged" ) {
-        updateMainColors();
-      }
-    }
-  );
-  chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if( request.message === "accentColorChanged" ) {
-        updateAccentColors();
+      switch (request.message) {
+        case 'mainColorChanged':
+          updateColor(MAIN_COLOR, "--main-color");
+          break;
+        case 'accentColorChanged':
+          updateColor(ACCENT_COLOR, "--accent-color");
+          break;
+        case 'categoryColorChanged':
+          updateColor(CATEGORY_COLOR, "--category-color");
+          break;
+        case 'cardLinkBgColorChanged':
+          updateColor(CARD_LINK_BG_COLOR, "--card-link-bg-color");
+          break;
+        case 'cardLinkTextColorChanged':
+          updateColor(CARD_LINK_TEXT_COLOR, "--card-link-text-color");
+          break;
+        case 'rssBgColorChanged':
+          updateColor(RSS_BG_COLOR, "--rss-bg-color");
+          break;
+        case 'rssTitleColorChanged':
+          updateColor(RSS_TITLE_COLOR, "--rss-title-color");
+          break;
+        case 'rssDateColorChanged':
+          updateColor(RSS_DATE_COLOR, "--rss-date-color");
+          break;
       }
     }
   );

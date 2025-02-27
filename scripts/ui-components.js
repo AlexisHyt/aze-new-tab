@@ -10,9 +10,10 @@ export function createLinkCard(item) {
   card.classList.add("link-card");
   card.innerHTML = `
     <a href="${item.link}">
-      <div class="delete-item" data-item-text="${item.text}">✖</div>
-      <img src="${item.img || 'default-icon.png'}" alt="${item.text}" />
-      <p>${item.text}</p>
+      <span class="category-uid" style="display: none;">${item.uid}</span>
+      <div class="delete-item" data-item-uid="${item.uid}">✖</div>
+      <img src="${item.img}" alt="${item.text}" />
+      ${item.hideTitle ? `<p style="display: none;">${item.text}</p>` : `<p>${item.text}</p>`}
     </a>
   `;
   return card;
