@@ -1,11 +1,10 @@
 // font.js - Font manager
 
 import {
-  ACCENT_COLOR,
-  CARD_LINK_BG_COLOR, CARD_LINK_TEXT_COLOR,
+  CARD_LINK_BG_COLOR, CARD_LINK_CREATE_COLOR, CARD_LINK_TEXT_COLOR,
   CATEGORY_COLOR,
   getStorageData,
-  MAIN_COLOR, RSS_BG_COLOR, RSS_DATE_COLOR, RSS_TITLE_COLOR
+  RSS_BG_COLOR, RSS_DATE_COLOR, RSS_TITLE_COLOR
 } from "./storage.js";
 
 export async function setColor(property, color) {
@@ -24,12 +23,6 @@ setTimeout(() => {
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       switch (request.message) {
-        case 'mainColorChanged':
-          updateColor(MAIN_COLOR, "--main-color");
-          break;
-        case 'accentColorChanged':
-          updateColor(ACCENT_COLOR, "--accent-color");
-          break;
         case 'categoryColorChanged':
           updateColor(CATEGORY_COLOR, "--category-color");
           break;
@@ -38,6 +31,9 @@ setTimeout(() => {
           break;
         case 'cardLinkTextColorChanged':
           updateColor(CARD_LINK_TEXT_COLOR, "--card-link-text-color");
+          break;
+        case 'cardLinkCreateColorChanged':
+          updateColor(CARD_LINK_CREATE_COLOR, "--card-link-create-color");
           break;
         case 'rssBgColorChanged':
           updateColor(RSS_BG_COLOR, "--rss-bg-color");

@@ -3,13 +3,12 @@ import { getCategories } from './scripts/category-manager.js';
 import { updateBackgroundImage } from "./scripts/background-image.js";
 import { updateFont } from "./scripts/font.js";
 import { updateColor } from "./scripts/colors.js";
-import { updateClockColor, updateMainClock } from "./scripts/clock.js";
+import { updateClockColor, updateClockShadowColor, updateMainClock } from "./scripts/clock.js";
 import {
-  ACCENT_COLOR,
-  CARD_LINK_BG_COLOR,
+  CARD_LINK_BG_COLOR, CARD_LINK_CREATE_COLOR,
   CARD_LINK_TEXT_COLOR,
   CATEGORY_COLOR,
-  MAIN_COLOR, RSS_BG_COLOR, RSS_DATE_COLOR, RSS_TITLE_COLOR
+  RSS_BG_COLOR, RSS_DATE_COLOR, RSS_TITLE_COLOR
 } from "./scripts/storage.js";
 
 /**
@@ -19,6 +18,7 @@ function init() {
   // Setup clock
   updateMainClock();
   updateClockColor();
+  updateClockShadowColor()
 
   // Update background image
   updateBackgroundImage();
@@ -27,10 +27,9 @@ function init() {
   updateFont();
 
   // Update Colors
-  updateColor(MAIN_COLOR, "--main-color");
-  updateColor(ACCENT_COLOR, "--accent-color");
   updateColor(CATEGORY_COLOR, "--category-color");
   updateColor(CARD_LINK_BG_COLOR, "--card-link-bg-color");
+  updateColor(CARD_LINK_CREATE_COLOR, "--card-link-create-color");
   updateColor(CARD_LINK_TEXT_COLOR, "--card-link-text-color", "#000");
   updateColor(RSS_BG_COLOR, "--rss-bg-color");
   updateColor(RSS_TITLE_COLOR, "--rss-title-color", "#000");

@@ -6,11 +6,12 @@
 }
 
 body {
-    --main-color: #fff;
     --accent-color: #000;
     --clock-color: #fff;
+    --clock-shadow-color: #000;
     --category-color: #fff;
     --card-link-bg-color: #fff;
+    --card-link-create-color: #fff;
     --card-link-text-color: #000;
     --rss-bg-color: #fff;
     --rss-title-color: #000;
@@ -48,7 +49,7 @@ body {
 .time {
     font-size: 8vw;
     color: var(--clock-color);
-    text-shadow: var(--accent-color) 0 0 10px;
+    text-shadow: var(--clock-shadow-color) 0 0 10px;
 }
 
 /* RSS Feed */
@@ -133,7 +134,7 @@ body {
 }
 .rss-date {
     font-size: 12px;
-    color: #888;
+    color: var(--rss-date-color);
     display: block;
 }
 
@@ -235,7 +236,7 @@ body {
 }
 .categories .category .link-card--add:hover {
     transform: translateY(-5px);
-    background: var(--main-color);
+    background: var(--card-link-create-color);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 .categories .category .link-card--add a {
@@ -265,7 +266,7 @@ body {
 }
 #create-category:hover {
     transform: translateY(-5px);
-    background: var(--main-color);
+    background: var(--card-link-create-color);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
