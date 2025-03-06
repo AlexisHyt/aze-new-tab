@@ -3,7 +3,7 @@ import { setupFormHandlers } from "./popup/handlers.js";
 
 /*
 TODO:
-Save/load themes (same as presets but only colors and styles)
+Search engine
  */
 
 // Initialize everything when the document is ready
