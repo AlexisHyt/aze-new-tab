@@ -3,7 +3,7 @@ import { setupFormHandlers } from "./popup/handlers.js";
 
 /*
 TODO:
-Search engine
+Custom search engine
  */
 
 // Initialize everything when the document is ready

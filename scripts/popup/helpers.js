@@ -42,3 +42,6 @@ export const readFileAsJson = (file) => {
     reader.readAsText(file);
   });
 };
+export const capitalize = (val) => {
+  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}

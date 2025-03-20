@@ -1,6 +1,25 @@
 // Generate the HTML for the settings forms
 import { settingsConfig } from "./settingsConfig.js";
-import { getStorageData, PRESETS_KEY, THEMES_KEY } from "../storage.js";
+import {
+  BACKGROUND,
+  CLOCKSTYLE,
+  COLORS,
+  FONT,
+  LINKS,
+  RSS,
+  SEARCH
+} from "../storage.js";
+import { capitalize } from "./helpers.js";
+
+export const checkboxesSaveForm = [
+  SEARCH,
+  LINKS,
+  RSS,
+  BACKGROUND,
+  FONT,
+  COLORS,
+  CLOCKSTYLE,
+];
 
 export const generateSettingsHTML = () => {
   const container = document.getElementById('settings-container');
@@ -99,9 +118,9 @@ export const generateSettingsHTML = () => {
   });
 
   // Add presets section
-  createPresetsSection(container);
-  createThemesSection(container);
+  // createPresetsSection(container);
 };
+
 // Create the presets UI section
 const createPresetsSection = (container) => {
   const presetsDiv = document.createElement('div');
@@ -111,68 +130,22 @@ const createPresetsSection = (container) => {
   const presetsLabel = document.createElement('label');
   presetsLabel.textContent = 'Presets:';
   presetsDiv.appendChild(presetsLabel);
-  const presetsSummary = document.createElement('span');
-  presetsSummary.textContent = '(takes font, background, colors, rrs url, links and clock style)';
-  presetsDiv.appendChild(presetsSummary);
 
   // Create save preset form
-  const saveForm = document.createElement('form');
-  saveForm.id = 'form-save-preset';
-  saveForm.className = 'preset-form';
-
-  const saveInput = document.createElement('input');
-  saveInput.type = 'text';
-  saveInput.id = 'preset-name';
-  saveInput.placeholder = 'Preset name';
-
-  const saveButton = document.createElement('button');
-  saveButton.type = 'submit';
-  saveButton.textContent = 'Save Preset';
-
-  saveForm.appendChild(saveInput);
-  saveForm.appendChild(saveButton);
+  const saveForm = createSaveForm();
   presetsDiv.appendChild(saveForm);
 
   // Create load preset form
-  const loadForm = document.createElement('form');
-  loadForm.id = 'form-load-preset';
-  loadForm.className = 'preset-form';
-
-  const selectPreset = document.createElement('select');
-  selectPreset.id = 'preset-select';
-  selectPreset.name = 'preset';
-
-  // We'll populate this with options later
-  const defaultOption = document.createElement('option');
-  defaultOption.value = '';
-  defaultOption.textContent = 'Select a preset';
-  defaultOption.disabled = true;
-  defaultOption.selected = true;
-  selectPreset.appendChild(defaultOption);
-
-  const loadButton = document.createElement('button');
-  loadButton.type = 'submit';
-  loadButton.textContent = 'Load';
-
-  const deleteButton = document.createElement('button');
-  deleteButton.type = 'button';
-  deleteButton.id = 'delete-preset';
-  deleteButton.textContent = 'Delete';
-  deleteButton.className = 'delete-button';
-
-  // Export button
-  const exportButton = document.createElement('button');
-  exportButton.type = 'button';
-  exportButton.id = 'export-preset';
-  exportButton.textContent = 'Export';
-  exportButton.className = 'export-button';
-
-  loadForm.appendChild(selectPreset);
-  loadForm.appendChild(loadButton);
-  loadForm.appendChild(deleteButton);
-  loadForm.appendChild(exportButton);
+  const loadForm = createLoadForm();
   presetsDiv.appendChild(loadForm);
 
+  const importForm = createFormImport()
+  presetsDiv.appendChild(importForm);
+
+  container.appendChild(presetsDiv);
+};
+
+const createFormImport = () => {
   // Create import preset section
   const importForm = document.createElement('form');
   importForm.id = 'import-preset-form';
@@ -210,79 +183,66 @@ const createPresetsSection = (container) => {
   importForm.appendChild(importTextarea);
   importForm.appendChild(importFileWrapper);
   importForm.appendChild(importButton);
-  presetsDiv.appendChild(importForm);
 
-  container.appendChild(presetsDiv);
-};
-// Populate the preset dropdown
-export const populatePresetDropdown = async () => {
-  const selectElement = document.getElementById('preset-select');
-  if (!selectElement) return;
-
-  // Clear existing options (except the default)
-  while (selectElement.options.length > 1) {
-    selectElement.remove(1);
-  }
-
-  // Get presets from storage
-  const presets = await getStorageData(PRESETS_KEY) || {};
-
-  // Add options for each preset
-  Object.keys(presets).forEach(presetName => {
-    const option = document.createElement('option');
-    option.value = presetName;
-    option.textContent = presetName;
-    selectElement.appendChild(option);
-  });
-};
-
-// Create the themes UI section
-const createThemesSection = (container) => {
-  const themesDiv = document.createElement('div');
-  themesDiv.className = 'settings-group themes-group';
-
-  // Add header
-  const themesLabel = document.createElement('label');
-  themesLabel.textContent = 'Themes:';
-  themesDiv.appendChild(themesLabel);
-  const themesSummary = document.createElement('span');
-  themesSummary.textContent = '(takes only font, background and colors)';
-  themesDiv.appendChild(themesSummary);
-
-  // Create save preset form
+  return importForm;
+}
+const createSaveForm = () => {
   const saveForm = document.createElement('form');
-  saveForm.id = 'form-save-theme';
-  saveForm.className = 'theme-form';
+  saveForm.id = 'form-save-preset';
+  saveForm.className = 'preset-form';
 
   const saveInput = document.createElement('input');
   saveInput.type = 'text';
-  saveInput.id = 'theme-name';
-  saveInput.placeholder = 'Theme name';
+  saveInput.id = 'preset-name';
+  saveInput.placeholder = 'Preset name';
+
+  const d = document.createElement('div');
+  d.style.display = "grid";
+  d.style.gridTemplateColumns = "repeat(2, 1fr)";
+  d.style.width = "200px";
+  d.style.gap = "2px";
+  checkboxesSaveForm.forEach((checkbox) => {
+    console.log(checkbox)
+    const c = document.createElement('input');
+    c.type = 'checkbox';
+    c.id = `checkbox-${checkbox}`;
+    c.className = `checkbox-${checkbox}`;
+    c.checked = true;
+    d.appendChild(c);
+
+    const l = document.createElement('label');
+    l.for = `checkbox-${checkbox}`;
+    l.className = `checkbox-${checkbox}-label`;
+    l.textContent = capitalize(checkbox);
+    d.appendChild(l);
+  });
+  saveForm.appendChild(d);
 
   const saveButton = document.createElement('button');
   saveButton.type = 'submit';
-  saveButton.textContent = 'Save Theme';
+  saveButton.textContent = 'Save Preset';
 
   saveForm.appendChild(saveInput);
   saveForm.appendChild(saveButton);
-  themesDiv.appendChild(saveForm);
 
-  // Create load preset form
+  return saveForm;
+}
+const createLoadForm = () => {
   const loadForm = document.createElement('form');
-  loadForm.id = 'form-load-theme';
-  loadForm.className = 'theme-form';
+  loadForm.id = 'form-load-preset';
+  loadForm.className = 'preset-form';
 
-  const selectTheme = document.createElement('select');
-  selectTheme.id = 'theme-select';
-  selectTheme.name = 'theme';
+  const selectPreset = document.createElement('select');
+  selectPreset.id = 'preset-select';
+  selectPreset.name = 'preset';
 
   // We'll populate this with options later
   const defaultOption = document.createElement('option');
   defaultOption.value = '';
-  defaultOption.textContent = 'Select a theme';
+  defaultOption.textContent = 'Select a preset';
   defaultOption.disabled = true;
   defaultOption.selected = true;
-  selectTheme.appendChild(defaultOption);
+  selectPreset.appendChild(defaultOption);
 
   const loadButton = document.createElement('button');
   loadButton.type = 'submit';
@@ -290,85 +250,24 @@ const createThemesSection = (container) => {
 
   const deleteButton = document.createElement('button');
   deleteButton.type = 'button';
-  deleteButton.id = 'delete-theme';
+  deleteButton.id = 'delete-preset';
   deleteButton.textContent = 'Delete';
   deleteButton.className = 'delete-button';
 
   // Export button
   const exportButton = document.createElement('button');
   exportButton.type = 'button';
-  exportButton.id = 'export-theme';
+  exportButton.id = 'export-preset';
   exportButton.textContent = 'Export';
   exportButton.className = 'export-button';
 
-  loadForm.appendChild(selectTheme);
+  loadForm.appendChild(selectPreset);
   loadForm.appendChild(loadButton);
   loadForm.appendChild(deleteButton);
   loadForm.appendChild(exportButton);
-  themesDiv.appendChild(loadForm);
 
-  // Create import preset section
-  const importForm = document.createElement('form');
-  importForm.id = 'import-theme-form';
-  importForm.className = 'theme-form import-form';
-
-  const importTextarea = document.createElement('textarea');
-  importTextarea.id = 'import-theme-data';
-  importTextarea.placeholder = 'Paste theme JSON data here';
-  importTextarea.rows = 2;
-  importTextarea.className = 'import-textarea';
-
-  // Create file import input
-  const importFileWrapper = document.createElement('div');
-  importFileWrapper.className = 'file-import-wrapper';
-
-  const importFileLabel = document.createElement('label');
-  importFileLabel.htmlFor = 'import-theme-file';
-  importFileLabel.textContent = 'Or select a JSON file:';
-  importFileLabel.className = 'file-import-label';
-
-  const importFile = document.createElement('input');
-  importFile.type = 'file';
-  importFile.id = 'import-theme-file';
-  importFile.accept = '.json';
-  importFile.className = 'file-import';
-
-  importFileWrapper.appendChild(importFileLabel);
-  importFileWrapper.appendChild(importFile);
-
-  const importButton = document.createElement('button');
-  importButton.type = 'submit';
-  importButton.textContent = 'Import Theme';
-  importButton.className = 'import-button';
-
-  importForm.appendChild(importTextarea);
-  importForm.appendChild(importFileWrapper);
-  importForm.appendChild(importButton);
-  themesDiv.appendChild(importForm);
-
-  container.appendChild(themesDiv);
-};
-// Populate the preset dropdown
-export const populateThemesDropdown = async () => {
-  const selectElement = document.getElementById('theme-select');
-  if (!selectElement) return;
-
-  // Clear existing options (except the default)
-  while (selectElement.options.length > 1) {
-    selectElement.remove(1);
-  }
-
-  // Get themes from storage
-  const themes = await getStorageData(THEMES_KEY) || {};
-
-  // Add options for each preset
-  Object.keys(themes).forEach(presetName => {
-    const option = document.createElement('option');
-    option.value = presetName;
-    option.textContent = presetName;
-    selectElement.appendChild(option);
-  });
-};
+  return loadForm;
+}
 
 // Add CSS styles for the file import
 export const addFileImportStyles = () => {

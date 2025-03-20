@@ -8,7 +8,6 @@ import {FONT_FAMILY_KEY, getStorageData} from "./storage.js";
  */
 export async function updateFont() {
   const fontName = await getStorageData(FONT_FAMILY_KEY);
-  console.log(fontName)
   if (fontName) {
     // Fetch font from google font
     WebFont.load({
@@ -19,6 +18,7 @@ export async function updateFont() {
 
     // Update font
     document.body.style.fontFamily = fontName;
+    document.querySelector('#search').style.fontFamily = fontName;
   }
 }
 

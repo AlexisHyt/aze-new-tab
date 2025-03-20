@@ -1,8 +1,14 @@
 // Process imported preset data (common function for both text and file imports)
-import { populatePresetDropdown } from "./generate-html.js";
-import { getPresetsSpecificStorageData, getStorageData, PRESETS_KEY, setStorageData } from "../storage.js";
+import {
+  CARD_LINK_SHOW_TITLE,
+  CATEGORIES,
+  getStorageData,
+  PRESETS_KEY,
+  setStorageData
+} from "../storage.js";
 import { settingsConfig } from "./settingsConfig.js";
 import { readFileAsJson, sendMessageToActiveTab, showNotification } from "./helpers.js";
+import { checkboxesSaveForm } from "./generate-html.js";
 
 const processImportedPreset = async (importedObj, parentElement) => {
   // Validate the imported data has the expected structure
@@ -29,6 +35,7 @@ const processImportedPreset = async (importedObj, parentElement) => {
 
   return presetName;
 };
+
 // Setup handlers for preset functionality
 export const setupPresetHandlers = () => {
   // Load presets into dropdown
@@ -47,26 +54,11 @@ export const setupPresetHandlers = () => {
         return;
       }
 
-      // Get all current settings
-      const allSettings = {};
-      const currentSettings = await getPresetsSpecificStorageData();
-
-      console.log("currentSettings")
-      console.log(currentSettings)
-
-      // Only include settings defined in our config
-      Object.entries(currentSettings).forEach(([key, value]) => {
-        allSettings[key] = value;
-      });
-
-      console.log("allSettings")
-      console.log(allSettings)
-
       // Get existing presets or create new object
       const presets = await getStorageData(PRESETS_KEY) || {};
 
       // Add/update the preset
-      presets[presetName] = allSettings;
+      presets[presetName] = await buildPresetObject(e);
 
       // Save presets back to storage
       await setStorageData(presets, PRESETS_KEY);
@@ -104,13 +96,15 @@ export const setupPresetHandlers = () => {
 
       // Apply all settings from the preset
       const messageTypes = [];
-      for (const [key, value] of Object.entries(preset)) {
-        await setStorageData(value, key);
+      for (const [_, category] of Object.entries(preset)) {
+        for (const [key, value] of Object.entries(category)) {
+          await setStorageData(value, key);
 
-        // Find which message to send for this key
-        const settingConfig = settingsConfig.find(s => s.storageKey === key);
-        if (settingConfig) {
-          messageTypes.push(settingConfig.messageType);
+          // Find which message to send for this key
+          const settingConfig = settingsConfig.find(s => s.storageKey === key);
+          if (settingConfig) {
+            messageTypes.push(settingConfig.messageType);
+          }
         }
       }
 
@@ -285,3 +279,53 @@ export const setupPresetHandlers = () => {
     };
   }
 };
+
+// Populate the preset dropdown
+export const populatePresetDropdown = async () => {
+  const selectElement = document.getElementById('preset-select');
+  if (!selectElement) return;
+
+  // Clear existing options (except the default)
+  while (selectElement.options.length > 1) {
+    selectElement.remove(1);
+  }
+
+  // Get presets from storage
+  const presets = await getStorageData(PRESETS_KEY) || {};
+
+  // Add options for each preset
+  Object.entries(presets).forEach(([presetName, preset]) => {
+    let text = presetName + " - ";
+    Object.entries(preset).forEach(([key, value]) => {
+      text += key + ", "
+    });
+    text = text.substr(0, text.length - 2);
+
+    const option = document.createElement('option');
+    option.value = presetName;
+    option.innerHTML = text;
+    selectElement.appendChild(option);
+  });
+};
+
+async function buildPresetObject(e) {
+  const obj = {};
+
+  for (const checkbox of checkboxesSaveForm) {
+    if (document.querySelector(`#checkbox-${checkbox}`).checked) {
+      obj[checkbox] = {};
+      for (const storageKey of CATEGORIES[checkbox]) {
+        const storageValue = await getStorageData(storageKey);
+        if (storageValue !== undefined) {
+          if (storageKey === CARD_LINK_SHOW_TITLE) {
+            obj[checkbox][storageKey] = storageValue === true || storageValue === 'true';
+          } else {
+            obj[checkbox][storageKey] = storageValue;
+          }
+        }
+      }
+    }
+  }
+
+  return obj;
+}

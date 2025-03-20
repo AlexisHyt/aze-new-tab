@@ -10,6 +10,7 @@ import {
   CATEGORY_COLOR,
   RSS_BG_COLOR, RSS_DATE_COLOR, RSS_TITLE_COLOR
 } from "./scripts/storage.js";
+import { setupEnterListener, updateSearchInput } from "./scripts/ui-components.js";
 
 /**
  * Initialize the extension
@@ -18,7 +19,12 @@ function init() {
   // Setup clock
   updateMainClock();
   updateClockColor();
-  updateClockShadowColor()
+  updateClockShadowColor();
+
+  // Update the search input
+  updateSearchInput();
+  setupEnterListener();
+
 
   // Update background image
   updateBackgroundImage();

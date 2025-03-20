@@ -3,7 +3,6 @@ import { settingsConfig } from "./settingsConfig.js";
 import { getStorageData, setStorageData } from "../storage.js";
 import { sendMessageToActiveTab } from "./helpers.js";
 import { setupPresetHandlers } from "./presets.js";
-import { setupThemeHandlers } from "./themes.js";
 
 export const setupFormHandlers = () => {
   settingsConfig.forEach(setting => {
@@ -49,5 +48,4 @@ export const setupFormHandlers = () => {
 
   // Setup preset handlers
   setupPresetHandlers();
-  setupThemeHandlers();
 };

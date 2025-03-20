@@ -79,29 +79,8 @@ button:hover {
     color: #007bff;
     text-decoration: none;
 }
-
 .settings-group a:hover {
     text-decoration: underline;
-}
-
-.import-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    grid-column-gap: 4px;
-    grid-row-gap: 0;
-}
-.import-form .import-textarea {
-    grid-area: 1 / 1 / 2 / 2;
-    height: auto;
-    margin-block: 1rem;
-}
-.import-form .file-import-wrapper {
-    grid-area: 1 / 2 / 2 / 3;
-}
-.import-form .import-button {
-    grid-area: 2 / 1 / 3 / 3;
-    height: fit-content;
 }
 
 /* Checkbox specific styling */
@@ -192,4 +171,17 @@ input[type="checkbox"] {
     to {
         transform: scaleX(0);
     }
+}
+
+.preset-form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-block: 40px;
+}
+.preset-form .preset-form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-block: 10px;
 }

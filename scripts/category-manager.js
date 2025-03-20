@@ -1,6 +1,6 @@
 // category-manager.js - Category and link management
 
-import {getStorageData, setStorageData, STORAGE_KEY} from './storage.js';
+import {getStorageData, setStorageData, LINKS_KEY} from './storage.js';
 import { createLinkCard, createAddButton } from './ui-components.js';
 
 /**
@@ -21,7 +21,7 @@ export function getFavicon(url) {
  */
 export async function getCategories() {
   try {
-    const itemsCategories = await getStorageData(STORAGE_KEY);
+    const itemsCategories = await getStorageData(LINKS_KEY);
     const container = document.getElementById("categories-link");
     if (!container) return;
 
@@ -120,7 +120,7 @@ async function handleAddLink(event) {
         image = await getFavicon(url);
       }
 
-      const links = await getStorageData(STORAGE_KEY);
+      const links = await getStorageData(LINKS_KEY);
       if (!links[category]) {
         links[category] = [];
       }
@@ -133,7 +133,7 @@ async function handleAddLink(event) {
         hideTitle: hideTitle,
       });
 
-      await setStorageData(links, STORAGE_KEY);
+      await setStorageData(links, LINKS_KEY);
       await getCategories();
       dialog.close();
       form.reset();
@@ -165,10 +165,10 @@ async function handleDeleteItem(event) {
     const categoryName = categoryTitleEl.textContent.trim().replaceAll('✖', '');
 
     try {
-      const links = await getStorageData(STORAGE_KEY);
+      const links = await getStorageData(LINKS_KEY);
       if (links[categoryName]) {
         links[categoryName] = links[categoryName].filter(item => item.uid !== itemUid);
-        await setStorageData(links, STORAGE_KEY);
+        await setStorageData(links, LINKS_KEY);
         await getCategories();
       }
     } catch (error) {
@@ -193,10 +193,10 @@ export async function handleAddCategory() {
     if (!name) return;
 
     try {
-      const links = await getStorageData(STORAGE_KEY);
+      const links = await getStorageData(LINKS_KEY);
       if (!links[name]) {
         links[name] = [];
-        await setStorageData(links, STORAGE_KEY);
+        await setStorageData(links, LINKS_KEY);
         await getCategories();
       } else {
         alert("Category already exists");
@@ -226,10 +226,10 @@ async function handleDeleteCategory(event) {
   if (categoryTitleEl) {
     const categoryName = categoryTitleEl.textContent.replaceAll('✖', '').trim();
     try {
-      const links = await getStorageData(STORAGE_KEY);
+      const links = await getStorageData(LINKS_KEY);
       if (links[categoryName]) {
         delete links[categoryName];
-        await setStorageData(links, STORAGE_KEY);
+        await setStorageData(links, LINKS_KEY);
         await getCategories();
       }
     } catch (error) {
