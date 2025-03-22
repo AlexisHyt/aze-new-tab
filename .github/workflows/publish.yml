@@ -1,0 +1,31 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    name: Publish webextension
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 20
+      - name: Ensure builds folder exists
+        run: mkdir -p builds
+      - name: Zip Build
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r builds/build.zip .
+      - name: Upload & release
+        uses: mnao305/chrome-extension-upload@v5.0.0
+        with:
+          file-path: builds/build.zip
+          extension-id: ${{ secrets.GOO_EXT_ID }}
+          client-id: ${{ secrets.GOO_CLIENT_ID }}
+          client-secret: ${{ secrets.GOO_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.GOO_REFRESH_TOKEN }}
