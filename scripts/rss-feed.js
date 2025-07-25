@@ -2,6 +2,7 @@
 
 import {getStorageData, RSS_URL} from "./storage.js";
 
+export const RSS_IMAGE_WRAPPER_NAME = "rss-img-wrapper"
 export const RSS_CONTAINER_NAME = "rss-feed"
 
 /**
@@ -9,6 +10,12 @@ export const RSS_CONTAINER_NAME = "rss-feed"
  * @param {string} url - RSS feed URL
  */
 export async function fetchRSSFeed(url) {
+  if (!url || isEmpty(url)) {
+    document.getElementById(RSS_IMAGE_WRAPPER_NAME).style.display = "none";
+    document.getElementById(RSS_CONTAINER_NAME).style.display = "none";
+    return;
+  }
+
   try {
     const response = await fetch(url);
     const data = await response.text();
@@ -70,6 +77,15 @@ export async function fetchRSSFeed(url) {
 export async function updateRSSFeed() {
   const url = await getStorageData(RSS_URL);
   fetchRSSFeed(url);
+}
+
+function isEmpty(obj) {
+  for (const prop in obj) {
+    if (Object.hasOwn(obj, prop)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 setTimeout(() => {
