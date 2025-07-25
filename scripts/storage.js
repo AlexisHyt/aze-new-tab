@@ -13,10 +13,11 @@ export const CARD_LINK_TEXT_COLOR = 'card-link-text-color';
 export const CARD_LINK_CREATE_COLOR = 'card-link-create-color';
 export const CARD_LINK_SHOW_TITLE = 'card-link-show-title';
 
-export const RSS_URL = 'rss-url';
+export const RSS_FEEDS = 'rss-feeds';
 export const RSS_BG_COLOR = 'rss-bg-color';
 export const RSS_TITLE_COLOR = 'rss-title-color';
 export const RSS_DATE_COLOR = 'rss-date-color';
+export const ACTIVE_RSS_FEED = 'active-rss-feed';
 
 export const CLOCK_COLOR = 'clock-color';
 export const CLOCK_SHADOW_COLOR = 'clock-shadow-color';
@@ -42,7 +43,8 @@ export const CATEGORIES = {
     CARD_LINK_SHOW_TITLE,
   ],
   [RSS]: [
-    RSS_URL
+    RSS_FEEDS,
+    ACTIVE_RSS_FEED
   ],
   [BACKGROUND]: [
     BACKGROUND_KEY
@@ -86,4 +88,28 @@ export async function getStorageData(key) {
  */
 export async function setStorageData(data, key) {
   await chrome.storage.sync.set({ [key]: data });
+}
+
+/**
+ * Initialize RSS feeds if they don't exist
+ * @returns {Promise<void>}
+ */
+export async function migrateRSSFeeds() {
+  try {
+    const existingFeeds = await getStorageData(RSS_FEEDS);
+    
+    // Initialize feeds array with a default feed if none exists
+    if (!existingFeeds || Object.keys(existingFeeds).length === 0) {
+      const defaultFeeds = [
+        {
+          name: 'Dev.to',
+          url: 'https://dev.to/feed'
+        }
+      ];
+      await setStorageData(defaultFeeds, RSS_FEEDS);
+      await setStorageData(0, ACTIVE_RSS_FEED);
+    }
+  } catch (error) {
+    console.error('Error initializing RSS feeds:', error);
+  }
 }

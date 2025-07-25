@@ -45,3 +45,16 @@ export const readFileAsJson = (file) => {
 export const capitalize = (val) => {
   return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
+
+export function isEmpty(obj) {
+  if (Array.isArray(obj)) {
+    return obj.length === 0;
+  }
+
+  for (const prop in obj) {
+    if (Object.hasOwn(obj, prop)) {
+      return false;
+    }
+  }
+  return true;
+}

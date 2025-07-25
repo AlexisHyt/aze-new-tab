@@ -11,7 +11,7 @@ import {
   RSS_BG_COLOR,
   RSS_DATE_COLOR,
   RSS_TITLE_COLOR,
-  RSS_URL, SEARCH_ENGINE
+  SEARCH_ENGINE
 } from "../storage.js";
 
 export const settingsConfig = [
@@ -129,14 +129,24 @@ export const settingsConfig = [
     hideLabel: true
   },
   {
-    id: 'rss',
-    label: 'RSS Url',
-    inputType: 'text',
-    inputName: 'url',
-    placeholder: 'RSS Feed Url',
-    storageKey: RSS_URL,
-    messageType: 'rssFeedChanged',
-    extraHtml: '<a href="https://github.com/plenaryapp/awesome-rss-feeds?tab=readme-ov-file" target="_blank">See here for RSS urls</a>'
+    id: 'rss-feeds-manager',
+    label: 'RSS Feeds Manager',
+    isTitle: false,
+    hideLabel: false,
+    hideInput: true,
+    extraHtml: `
+      <div class="rss-feeds-manager">
+        <h3>Manage RSS Feeds</h3>
+        <div class="rss-feeds-list" id="rss-feeds-list">
+          <p class="no-feeds-message">No feeds added yet.</p>
+        </div>
+        <div class="add-feed-form">
+          <input type="text" id="new-feed-name" placeholder="Feed Name" />
+          <input type="text" id="new-feed-url" placeholder="Feed URL" />
+          <button type="button" id="add-feed-btn">Add Feed</button>
+        </div>
+      </div>
+    `
   },
   {
     id: 'color-rss-bg',

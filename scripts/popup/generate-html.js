@@ -50,6 +50,10 @@ export const generateSettingsHTML = () => {
 
     // Add each setting form to the group
     settings.forEach(setting => {
+      if (setting.hideInput) {
+        return;
+      }
+
       if (setting.isTitle) {
         const title = document.createElement('h2');
         title.textContent = setting.label;
@@ -202,7 +206,6 @@ const createSaveForm = () => {
   d.style.width = "200px";
   d.style.gap = "2px";
   checkboxesSaveForm.forEach((checkbox) => {
-    console.log(checkbox)
     const c = document.createElement('input');
     c.type = 'checkbox';
     c.id = `checkbox-${checkbox}`;

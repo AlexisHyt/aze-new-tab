@@ -185,3 +185,75 @@ input[type="checkbox"] {
     gap: 4px;
     margin-block: 10px;
 }
+
+.rss-feeds-manager {
+    margin: 15px 0;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+.rss-feeds-manager h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.rss-feeds-list {
+    margin-bottom: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.feed-item {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px;
+    margin-bottom: 5px;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.feed-item-info {
+    flex: 1;
+}
+.feed-item-name {
+    font-weight: bold;
+}
+.feed-item-url {
+    font-size: 0.8em;
+    color: #666;
+    word-break: break-all;
+}
+.feed-item-actions {
+    display: flex;
+    gap: 5px;
+}
+.feed-item-actions button {
+    padding: 3px 8px;
+    background: #007bff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.feed-item-actions button:hover {
+    background: #0056b3;
+}
+.feed-item-actions .delete-btn {
+    background: #F44336;
+}
+.feed-item-actions .delete-btn:hover {
+    background: #E53935;
+}
+.add-feed-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.add-feed-form input {
+    flex: 1;
+    min-width: 120px;
+    padding: 8px;
+}
+.no-feeds-message {
+    font-style: italic;
+    color: #666;
+}

@@ -1,4 +1,4 @@
-import { updateRSSFeed } from './scripts/rss-feed.js';
+import { initializeRSSFeeds } from './scripts/rss-feed.js';
 import { getCategories } from './scripts/category-manager.js';
 import { updateBackgroundImage } from "./scripts/background-image.js";
 import { updateFont } from "./scripts/font.js";
@@ -43,7 +43,7 @@ function init() {
 
   // Load RSS feed
   // fetchRSSFeed("https://dev.to/feed");
-  updateRSSFeed();
+  initializeRSSFeeds();
 
   // Load categories
   getCategories();
