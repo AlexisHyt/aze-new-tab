@@ -13,7 +13,7 @@ import { capitalize } from "./helpers.js";
 
 export const checkboxesSaveForm = [
   SEARCH,
-  LINKS,
+  // LINKS removed from presets; managed via Groups
   RSS,
   BACKGROUND,
   FONT,

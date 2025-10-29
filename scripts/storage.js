@@ -34,14 +34,19 @@ export const CLOCKSTYLE = "clock-style";
 
 export const PRESETS_KEY = 'presets';
 
+// Groups storage
+export const GROUPS_KEY = 'groups';
+export const ACTIVE_GROUP_KEY = 'active-group';
+
 export const CATEGORIES = {
   [SEARCH]: [
     SEARCH_ENGINE
   ],
-  [LINKS]: [
-    LINKS_KEY,
-    CARD_LINK_SHOW_TITLE,
-  ],
+  // NOTE: LINKS are intentionally excluded from presets per new Groups system
+  // [LINKS]: [
+  //   LINKS_KEY,
+  //   CARD_LINK_SHOW_TITLE,
+  // ],
   [RSS]: [
     RSS_FEEDS,
     ACTIVE_RSS_FEED
@@ -111,5 +116,32 @@ export async function migrateRSSFeeds() {
     }
   } catch (error) {
     console.error('Error initializing RSS feeds:', error);
+  }
+}
+
+/**
+ * Migration: If Groups do not exist but legacy LINKS exist, create a Default group
+ */
+export async function migrateGroupsFromLegacy() {
+  try {
+    const groups = await getStorageData(GROUPS_KEY);
+    const hasGroups = groups && Object.keys(groups).length > 0;
+
+    if (!hasGroups) {
+      const legacyLinks = await getStorageData(LINKS_KEY);
+      const hasLegacyLinks = legacyLinks && Object.keys(legacyLinks).length > 0;
+
+      if (hasLegacyLinks) {
+        const defaultName = 'Default';
+        const newGroups = { [defaultName]: { links: legacyLinks } };
+        await setStorageData(newGroups, GROUPS_KEY);
+        await setStorageData(defaultName, ACTIVE_GROUP_KEY);
+        return true;
+      }
+    }
+    return false;
+  } catch (error) {
+    console.error('Error migrating Groups from legacy LINKS:', error);
+    return false;
   }
 }

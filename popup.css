@@ -23,6 +23,19 @@ body {
 }
 
 /* Updated for the new structure */
+.groups-form-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    margin-block: 10px;
+}
+.groups-form-grid-row {
+    display: flex;
+    gap: 4px;
+}
+.groups-form-grid-row > button {
+    width: 100%;
+}
 .settings-group {
     margin-bottom: 5px;
 }

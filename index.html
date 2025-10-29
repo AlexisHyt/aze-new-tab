@@ -49,8 +49,15 @@
         </div>
         <p id="time" class="time"></p>
         <div>
+            <div class="group-select-wrapper">
+                <div class="group-select">
+                    <button type="button" id="group-select-trigger" aria-haspopup="listbox" aria-expanded="false" class="group-trigger">Select group</button>
+                    <div id="group-dropdown" class="group-dropdown" role="listbox" tabindex="-1" aria-labelledby="group-select-trigger"></div>
+                    <select id="group-select" aria-hidden="true" tabindex="-1"></select>
+                </div>
+              <div id="create-category" class="group-trigger">Create category</div>
+            </div>
             <div id="categories-link" class="categories"></div>
-            <div id="create-category">Create category</div>
         </div>
     </div>
     <div id="right" class="rss-wrapper">

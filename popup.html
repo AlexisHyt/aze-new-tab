@@ -17,6 +17,27 @@
 <div id="settings-container">
 </div>
 <div id="preset-container">
+
+  <div id="groups-container">
+    <div id="groups-manage" class="settings-group groups-group">
+      <label>Groups</label>
+      <div class="groups-form-grid">
+        <input type="text" id="input-group-name" placeholder="New group name" />
+        <div class="groups-form-grid-row">
+          <button type="button" id="btn-create-group">Create from current</button>
+        </div>
+      </div>
+      <div class="groups-form-grid">
+        <select id="groups-manage-select"></select>
+        <div class="groups-form-grid-row">
+          <button type="button" id="btn-update-group">Update from current</button>
+          <button type="button" id="btn-set-active-group" class="primary-button">Set active</button>
+          <button type="button" id="btn-delete-group" class="delete-button">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="settings-group presets-group">
     <form id="form-save-preset" class="preset-form">
       <label>Save Preset:</label>
@@ -24,8 +45,6 @@
         <input type="checkbox" id="checkbox-search-engine" class="checkbox-search-engine" checked>
         <label for="checkbox-search-engine" class="checkbox-search-engine-label">Search Engine</label>
 
-        <input type="checkbox" id="checkbox-links" class="checkbox-links" checked>
-        <label for="checkbox-links" class="checkbox-links-label">Links</label>
 
         <input type="checkbox" id="checkbox-rss" class="checkbox-rss" checked>
         <label for="checkbox-rss" class="checkbox-rss-label">Rss</label>
@@ -72,8 +91,6 @@
         <input type="checkbox" id="checkbox-import-search-engine" class="checkbox-links" checked>
         <label for="checkbox-import-search-engine" class="checkbox-search-engine-label">Search Engine</label>
 
-        <input type="checkbox" id="checkbox-import-links" class="checkbox-links" checked>
-        <label for="checkbox-import-links" class="checkbox-links-label">Links</label>
 
         <input type="checkbox" id="checkbox-import-rss" class="checkbox-rss" checked>
         <label for="checkbox-import-rss" class="checkbox-rss-label">Rss</label>

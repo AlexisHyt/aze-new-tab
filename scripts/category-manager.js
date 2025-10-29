@@ -5,7 +5,7 @@
 // - Adding and deleting categories and links
 // - Drag and drop functionality to move links between categories
 
-import {getStorageData, setStorageData, LINKS_KEY} from './storage.js';
+import {getStorageData, setStorageData, LINKS_KEY, GROUPS_KEY, ACTIVE_GROUP_KEY} from './storage.js';
 import { createLinkCard, createAddButton } from './ui-components.js';
 
 /**
@@ -22,11 +22,44 @@ export function getFavicon(url) {
 }
 
 /**
+ * Helpers to work with active Group links
+ */
+async function getActiveGroupName() {
+  const active = await getStorageData(ACTIVE_GROUP_KEY);
+  if (typeof active === 'string' && active) return active;
+  return null;
+}
+
+async function loadActiveGroupLinks() {
+  const groups = await getStorageData(GROUPS_KEY);
+  const active = await getActiveGroupName();
+  if (active && groups && groups[active] && groups[active].links) {
+    return groups[active].links;
+  }
+  // Fallback to legacy storage
+  return await getStorageData(LINKS_KEY);
+}
+
+async function saveActiveGroupLinks(links) {
+  const groups = await getStorageData(GROUPS_KEY);
+  const active = await getActiveGroupName();
+  if (active) {
+    const newGroups = { ...(groups || {}) };
+    const currentGroup = newGroups[active] || {};
+    newGroups[active] = { ...currentGroup, links: links || {} };
+    await setStorageData(newGroups, GROUPS_KEY);
+  } else {
+    // Legacy fallback
+    await setStorageData(links || {}, LINKS_KEY);
+  }
+}
+
+/**
  * Load and display categories
  */
 export async function getCategories() {
   try {
-    const itemsCategories = await getStorageData(LINKS_KEY);
+    const itemsCategories = await loadActiveGroupLinks();
     const container = document.getElementById("categories-link");
     if (!container) return;
 
@@ -203,7 +236,7 @@ async function handleDrop(event) {
   
   try {
     // Get the current links data
-    const links = await getStorageData(LINKS_KEY);
+    const links = await loadActiveGroupLinks();
     
     // Find the link in the source category
     const linkItem = links[sourceCategory].find(item => item.uid === linkUid);
@@ -219,7 +252,7 @@ async function handleDrop(event) {
       links[targetCategory].push(linkItem);
       
       // Update storage and refresh the UI
-      await setStorageData(links, LINKS_KEY);
+      await saveActiveGroupLinks(links);
       await getCategories();
     }
   } catch (error) {
@@ -258,7 +291,7 @@ async function handleAddLink(event) {
         image = await getFavicon(url);
       }
 
-      const links = await getStorageData(LINKS_KEY);
+      const links = await loadActiveGroupLinks();
       if (!links[category]) {
         links[category] = [];
       }
@@ -271,7 +304,7 @@ async function handleAddLink(event) {
         hideTitle: hideTitle,
       });
 
-      await setStorageData(links, LINKS_KEY);
+      await saveActiveGroupLinks(links);
       await getCategories();
       dialog.close();
       form.reset();
@@ -303,10 +336,10 @@ async function handleDeleteItem(event) {
     const categoryName = categoryTitleEl.textContent.trim().replaceAll('✖', '');
 
     try {
-      const links = await getStorageData(LINKS_KEY);
+      const links = await loadActiveGroupLinks();
       if (links[categoryName]) {
         links[categoryName] = links[categoryName].filter(item => item.uid !== itemUid);
-        await setStorageData(links, LINKS_KEY);
+        await saveActiveGroupLinks(links);
         await getCategories();
       }
     } catch (error) {
@@ -331,10 +364,10 @@ export async function handleAddCategory() {
     if (!name) return;
 
     try {
-      const links = await getStorageData(LINKS_KEY);
+      const links = await loadActiveGroupLinks();
       if (!links[name]) {
         links[name] = [];
-        await setStorageData(links, LINKS_KEY);
+        await saveActiveGroupLinks(links);
         await getCategories();
       } else {
         alert("Category already exists");
@@ -364,10 +397,10 @@ async function handleDeleteCategory(event) {
   if (categoryTitleEl) {
     const categoryName = categoryTitleEl.textContent.replaceAll('✖', '').trim();
     try {
-      const links = await getStorageData(LINKS_KEY);
+      const links = await loadActiveGroupLinks();
       if (links[categoryName]) {
         delete links[categoryName];
-        await setStorageData(links, LINKS_KEY);
+        await saveActiveGroupLinks(links);
         await getCategories();
       }
     } catch (error) {
@@ -386,7 +419,7 @@ function guidGenerator() {
 setTimeout(() => {
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-      if( request.message === "cardLinkShowTitleChanged" ) {
+      if( request.message === "cardLinkShowTitleChanged" || request.message === 'reload') {
         getCategories();
       }
     }

@@ -180,6 +180,28 @@ body {
 .categories {
     display: flex;
     flex-direction: column;
+    max-height: 50vh;
+    overflow-y: auto;
+    /* Themed scrollbar (Firefox) */
+    scrollbar-width: thin;
+    scrollbar-color: var(--card-link-create-color) rgba(255, 255, 255, 0.08);
+}
+
+/* Themed scrollbar for Categories (WebKit/Blink) */
+.categories::-webkit-scrollbar {
+    width: 6px;
+}
+.categories::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+}
+.categories::-webkit-scrollbar-thumb {
+    background: var(--card-link-create-color);
+    border-radius: 9999px;
+}
+.categories:hover::-webkit-scrollbar-thumb {
+    /* Slightly brighter on hover for better affordance */
+    background: var(--card-link-create-color);
 }
 
 .category-item {
@@ -297,27 +319,27 @@ body {
 }
 
 /* Create Category */
-#create-category {
-    height: 30px;
-    width: 160px;
-    padding: 10px;
-    gap: 5px;
-    margin-top: 2em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--category-color);
-    cursor: pointer;
-    transition: box-shadow 0.3s ease, transform 0.3s ease, background 0.3s ease;
-}
-#create-category:hover {
-    transform: translateY(-5px);
-    background: var(--card-link-create-color);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
+/*#create-category {*/
+/*    height: 30px;*/
+/*    width: 160px;*/
+/*    padding: 10px;*/
+/*    gap: 5px;*/
+/*    margin-top: 2em;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    text-decoration: none;*/
+/*    background: rgba(255, 255, 255, 0.05);*/
+/*    color: var(--category-color);*/
+/*    cursor: pointer;*/
+/*    transition: box-shadow 0.3s ease, transform 0.3s ease, background 0.3s ease;*/
+/*}*/
+/*#create-category:hover {*/
+/*    transform: translateY(-5px);*/
+/*    background: var(--card-link-create-color);*/
+/*    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);*/
+/*}*/
 
 /* Dialogs */
 dialog {
@@ -408,4 +430,149 @@ dialog .close-dialog {
     font-size: 1.4em;
     outline: none;
     border-radius: 9999px;
+}
+/* Group selector (main page) */
+.group-select-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0 8px;
+    position: relative; /* for custom arrow */
+}
+
+.group-select-wrapper label {
+    color: var(--category-color);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+/* Themed select */
+#group-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    font: inherit;
+    color: var(--category-color);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 9999px; /* pill like the search field */
+
+    padding: 10px 42px 10px 14px; /* leave room for arrow */
+    min-width: 180px;
+    outline: none;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+#group-select:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+#group-select:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
+    border-color: var(--card-link-create-color);
+}
+
+#group-select:disabled,
+#group-select[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* Make sure the selector stays readable on very bright themes */
+@media (prefers-contrast: more) {
+    #group-select {
+        border-color: rgba(255, 255, 255, 0.45);
+    }
+}
+
+/* Custom dropdown (matches trigger theme) */
+.group-select { position: relative; display: inline-block; }
+
+.group-trigger {
+    font: inherit;
+    color: var(--category-color);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    padding: 10px 42px 10px 14px;
+    min-width: 180px;
+    outline: none;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    cursor: pointer;
+    text-align: left;
+}
+.group-trigger:hover {
+    /*background: rgba(255, 255, 255, 0.08); */
+    border-color: rgba(255, 255, 255, 0.0);
+    background: var(--card-link-create-color);
+}
+.group-trigger:focus {
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
+    border-color: var(--card-link-create-color);
+}
+.group-trigger[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Dropdown panel */
+.group-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 50;
+    display: none;
+}
+.group-dropdown.open { display: block; animation: fade-slide 120ms ease-out; }
+
+@keyframes fade-slide {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Option items */
+.group-option {
+    color: var(--category-color);
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.group-option:hover,
+.group-option[aria-selected="true"],
+.group-option:focus { background: rgba(255, 255, 255, 0.08); outline: none; }
+.group-option .badge { color: var(--card-link-text-color); background: var(--card-link-create-color); border-radius: 9999px; padding: 2px 8px; font-size: 12px; }
+
+/* Hide native select but keep for accessibility/fallback */
+#group-select[aria-hidden="true"] { position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; }
+
+/* Arrow for the custom trigger */
+.group-select .group-trigger::after {
+    content: "";
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--category-color);
+    border-bottom: 2px solid var(--category-color);
+    transform: translateY(-50%) rotate(45deg);
+    pointer-events: none;
+    opacity: 0.9;
 }

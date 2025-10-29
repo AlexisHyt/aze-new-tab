@@ -1,7 +1,8 @@
 import { addFileImportStyles, generateSettingsHTML } from "./popup/generate-html.js";
 import { setupFormHandlers } from "./popup/handlers.js";
 import { initRSSFeedsManager } from "./popup/rss-feeds-manager.js";
-import { migrateRSSFeeds } from "./storage.js";
+import { migrateRSSFeeds, migrateGroupsFromLegacy } from "./storage.js";
+import { initGroupsManager } from './popup/groups.js';
 
 /*
 TODO:
@@ -12,6 +13,8 @@ Custom search engine
 document.addEventListener('DOMContentLoaded', async () => {
   // Initialize RSS feeds if needed
   await migrateRSSFeeds();
+  // Ensure groups exist if legacy links are present
+  await migrateGroupsFromLegacy();
   
   // Generate UI
   addFileImportStyles();
@@ -20,4 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Initialize RSS feeds manager
   initRSSFeedsManager();
+
+  // Initialize Groups manager
+  await initGroupsManager();
 });
