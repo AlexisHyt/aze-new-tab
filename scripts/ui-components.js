@@ -57,6 +57,8 @@ export function setupEnterListener() {
 export function createLinkCard(item) {
   const card = document.createElement("div");
   card.classList.add("link-card");
+  card.setAttribute("draggable", "true");
+  card.setAttribute("data-item-uid", item.uid);
   card.innerHTML = `
     <a href="${item.link}">
       <span class="category-uid" style="display: none;">${item.uid}</span>

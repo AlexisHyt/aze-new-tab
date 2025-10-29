@@ -1,4 +1,9 @@
 // category-manager.js - Category and link management
+// 
+// This file handles the management of categories and links, including:
+// - Loading and displaying categories and links
+// - Adding and deleting categories and links
+// - Drag and drop functionality to move links between categories
 
 import {getStorageData, setStorageData, LINKS_KEY} from './storage.js';
 import { createLinkCard, createAddButton } from './ui-components.js';
@@ -86,6 +91,139 @@ function addEventListeners() {
   const addCategoryBtn = document.getElementById("create-category");
   if (addCategoryBtn) {
     addCategoryBtn.addEventListener("click", handleAddCategory);
+  }
+
+  // Add drag and drop listeners
+  addDragAndDropListeners();
+}
+
+/**
+ * Add drag and drop event listeners
+ */
+function addDragAndDropListeners() {
+  // Add drag listeners to link cards
+  document.querySelectorAll(".link-card:not(.link-card--add)").forEach(card => {
+    card.addEventListener("dragstart", handleDragStart);
+    card.addEventListener("dragend", handleDragEnd);
+  });
+
+  // Add drag listeners to category containers
+  document.querySelectorAll(".category").forEach(category => {
+    category.addEventListener("dragover", handleDragOver);
+    category.addEventListener("dragleave", handleDragLeave);
+    category.addEventListener("drop", handleDrop);
+  });
+}
+
+/**
+ * Handle drag start event
+ * @param {DragEvent} event - Drag event
+ */
+function handleDragStart(event) {
+  // Store the link's UID and find its category
+  const linkCard = event.currentTarget;
+  const linkUid = linkCard.getAttribute("data-item-uid");
+  const categoryEl = linkCard.closest('.category');
+  const categoryTitleEl = categoryEl.previousElementSibling;
+  const categoryName = categoryTitleEl.textContent.trim().replaceAll('✖', '');
+  
+  // Add dragging class for visual feedback
+  linkCard.classList.add('dragging');
+  
+  // Store data in the dataTransfer object
+  event.dataTransfer.setData("text/plain", JSON.stringify({
+    linkUid: linkUid,
+    sourceCategory: categoryName
+  }));
+  
+  // Set the drag effect
+  event.dataTransfer.effectAllowed = "move";
+}
+
+/**
+ * Handle drag end event
+ * @param {DragEvent} event - Drag event
+ */
+function handleDragEnd(event) {
+  // Remove dragging class
+  event.currentTarget.classList.remove('dragging');
+  
+  // Remove drag-over class from all categories
+  document.querySelectorAll('.category').forEach(category => {
+    category.classList.remove('drag-over');
+  });
+}
+
+/**
+ * Handle drag over event
+ * @param {DragEvent} event - Drag event
+ */
+function handleDragOver(event) {
+  // Prevent default to allow drop
+  event.preventDefault();
+  event.dataTransfer.dropEffect = "move";
+  
+  // Add drag-over class for visual feedback
+  event.currentTarget.querySelector('.link-card--add').classList.add('drag-over');
+}
+
+/**
+ * Handle drag leave event
+ * @param {DragEvent} event - Drag event
+ */
+function handleDragLeave(event) {
+  // Remove drag-over class
+  event.currentTarget.querySelector('.link-card--add').classList.remove('drag-over');
+}
+
+/**
+ * Handle drop event
+ * @param {DragEvent} event - Drop event
+ */
+async function handleDrop(event) {
+  event.preventDefault();
+  
+  // Remove drag-over class
+  event.currentTarget.classList.remove('drag-over');
+  
+  // Get the data from the dataTransfer object
+  const data = JSON.parse(event.dataTransfer.getData("text/plain"));
+  const linkUid = data.linkUid;
+  const sourceCategory = data.sourceCategory;
+  
+  // Get the target category
+  const targetCategoryEl = event.currentTarget;
+  const targetCategoryTitleEl = targetCategoryEl.previousElementSibling;
+  const targetCategory = targetCategoryTitleEl.textContent.trim().replaceAll('✖', '');
+  
+  // Don't do anything if dropping in the same category
+  if (sourceCategory === targetCategory) {
+    return;
+  }
+  
+  try {
+    // Get the current links data
+    const links = await getStorageData(LINKS_KEY);
+    
+    // Find the link in the source category
+    const linkItem = links[sourceCategory].find(item => item.uid === linkUid);
+    
+    if (linkItem) {
+      // Remove the link from the source category
+      links[sourceCategory] = links[sourceCategory].filter(item => item.uid !== linkUid);
+      
+      // Add the link to the target category
+      if (!links[targetCategory]) {
+        links[targetCategory] = [];
+      }
+      links[targetCategory].push(linkItem);
+      
+      // Update storage and refresh the UI
+      await setStorageData(links, LINKS_KEY);
+      await getCategories();
+    }
+  } catch (error) {
+    console.error("Error moving link:", error);
   }
 }
 
