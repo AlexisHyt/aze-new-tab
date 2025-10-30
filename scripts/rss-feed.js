@@ -3,9 +3,9 @@
 import {
   getStorageData,
   setStorageData,
-  RSS_FEEDS, 
-  ACTIVE_RSS_FEED, 
-  migrateRSSFeeds
+  RSS_FEEDS,
+  ACTIVE_RSS_FEED,
+  migrateRSSFeeds, CLOCK_SHOW_SECONDS, RSS_ENABLE
 } from "./storage.js";
 import { isEmpty } from "./popup/helpers.js";
 
@@ -19,7 +19,8 @@ export const RSS_TABS_CONTAINER_NAME = "rss-tabs"
 export async function initializeRSSFeeds() {
   await migrateRSSFeeds();
   await updateRSSFeed();
-  setupRSSTabs();
+  await setupRSSTabs();
+  await toggleRSS();
 }
 
 /**
@@ -220,6 +221,21 @@ export async function updateRSSFeed() {
   }
 }
 
+export async function toggleRSS() {
+  const rightContainer = document.querySelector("#right");
+  const mainWrapper = document.querySelector("main.wrapper");
+
+  const rssEnabled = await getStorageData(RSS_ENABLE);
+
+  if (rssEnabled && typeof rssEnabled !== 'object') {
+    rightContainer.style.display = "block";
+    mainWrapper.style.justifyContent = "center";
+  } else {
+    rightContainer.style.display = "none";
+    mainWrapper.style.justifyContent = "flex-start";
+  }
+}
+
 setTimeout(() => {
   chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
@@ -228,6 +244,8 @@ setTimeout(() => {
         setupRSSTabs();
       } else if (request.message === "rssTabsChanged") {
         setupRSSTabs();
+      } else if (request.message === "rssToggle") {
+        toggleRSS();
       }
     }
   );

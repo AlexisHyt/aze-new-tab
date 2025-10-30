@@ -9,7 +9,7 @@ import {
   CLOCK_STYLE,
   FONT_FAMILY_KEY,
   RSS_BG_COLOR,
-  RSS_DATE_COLOR,
+  RSS_DATE_COLOR, RSS_ENABLE,
   RSS_TITLE_COLOR,
   SEARCH_ENGINE
 } from "../storage.js";
@@ -90,7 +90,7 @@ export const settingsConfig = [
     value: '{"name": "","link": "","logo": ""}',
     storageKey: SEARCH_ENGINE,
     messageType: 'categoryColorChanged',
-    extraHtml: `<span>Update the json object with "name", "link" and "logo". For the link, use %input% placeholder, this will be replaced by your input. Use this at your own risk.</span>`
+    extraHtml: `<span>If you want to use an engine that is not in the list on the left, update the json object with "name", "link" and "logo". For the link, use %input% placeholder, this will be replaced by your input. Use this at your own risk.</span>`
   },
   {
     id: 'bgTitle',
@@ -120,13 +120,23 @@ export const settingsConfig = [
     inputName: 'name',
     placeholder: 'Google Font Family Name',
     storageKey: FONT_FAMILY_KEY,
-    messageType: 'fontChanged'
+    messageType: 'fontChanged',
+    extraHtml: `<span>Font name on Google Font. It might not work with all fonts, I'm sorry :D</span>`
   },
   {
     id: 'rssTitle',
     label: 'RSS',
     isTitle: true,
     hideLabel: true
+  },
+  {
+    id: 'rss-enable',
+    label: 'Enable RSS',
+    inputType: 'checkbox',
+    inputName: 'show',
+    checkboxLabel: '',
+    storageKey: RSS_ENABLE,
+    messageType: 'rssToggle'
   },
   {
     id: 'rss-feeds-manager',
@@ -188,7 +198,8 @@ export const settingsConfig = [
     inputName: 'style',
     options: [
       { value: 'default', label: 'Default' },
-      { value: 'flip', label: 'Flip Digits' }
+      { value: 'flip', label: 'Flip Digits' },
+      { value: 'clocks', label: 'Digital Clocks' },
     ],
     storageKey: CLOCK_STYLE,
     messageType: 'clockStyleChanged'

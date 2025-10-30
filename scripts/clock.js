@@ -3,6 +3,7 @@
 import { CLOCK_COLOR, CLOCK_SHADOW_COLOR, CLOCK_STYLE, getStorageData } from "./storage.js";
 import { initClock as initClock1 } from "./clock1.js";
 import { initClock as initClock2 } from "./clock2.js";
+import { initClock as initClock3 } from "./clock3.js";
 
 export async function updateClockColor() {
   const color = await getStorageData(CLOCK_COLOR);
@@ -28,6 +29,9 @@ export async function updateMainClock() {
   switch (style) {
     case 'flip':
       initClock2();
+      break;
+    case 'clocks':
+      initClock3();
       break;
     case 'default':
     default:

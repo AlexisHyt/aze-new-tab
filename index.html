@@ -40,6 +40,16 @@
         </form>
         <button id="close-cat-dialog" class="close-dialog">✖</button>
     </dialog>
+    <dialog id="create-group-dialog">
+        <p>Create Group from Current</p>
+        <form id="create-group-form">
+            <label for="create-group-name">Name:</label>
+            <input id="create-group-name" type="text" placeholder="Group name" required autofocus />
+            <div id="create-group-error" class="error" aria-live="polite" style="display:none"></div>
+            <button type="submit">Create</button>
+        </form>
+        <button id="close-create-group-dialog" class="close-dialog">✖</button>
+    </dialog>
 
     <!-- Content -->
     <div id="left">
@@ -55,6 +65,7 @@
                     <div id="group-dropdown" class="group-dropdown" role="listbox" tabindex="-1" aria-labelledby="group-select-trigger"></div>
                     <select id="group-select" aria-hidden="true" tabindex="-1"></select>
                 </div>
+                <div id="create-group" class="group-trigger">Create new group</div>
               <div id="create-category" class="group-trigger">Create category</div>
             </div>
             <div id="categories-link" class="categories"></div>

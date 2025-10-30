@@ -9,26 +9,39 @@ import {
   CARD_LINK_TEXT_COLOR,
   CATEGORY_COLOR,
   RSS_BG_COLOR, RSS_DATE_COLOR, RSS_TITLE_COLOR,
-  GROUPS_KEY, ACTIVE_GROUP_KEY,
+  GROUPS_KEY, ACTIVE_GROUP_KEY, LINKS_KEY,
   getStorageData, setStorageData
 } from "./scripts/storage.js";
 import { setupEnterListener, updateSearchInput } from "./scripts/ui-components.js";
 import { migrateGroupsFromLegacy } from './scripts/storage.js';
 
+// Render sequencing guard to prevent interleaved duplicate renders
+let _populateGroupSelectSeq = 0;
 async function populateGroupSelect() {
   const select = document.getElementById('group-select');
   const trigger = document.getElementById('group-select-trigger');
   const dropdown = document.getElementById('group-dropdown');
   if (!select || !trigger || !dropdown) return;
 
-  // Clear native select
-  while (select.firstChild) select.removeChild(select.firstChild);
-  // Clear custom dropdown
-  dropdown.innerHTML = '';
+  // Capture this run's sequence id
+  const seq = ++_populateGroupSelectSeq;
 
-  const groups = await getStorageData(GROUPS_KEY) || {};
-  const active = await getStorageData(ACTIVE_GROUP_KEY);
+  // Read current data first
+  const [groupsRaw, activeRaw] = await Promise.all([
+    getStorageData(GROUPS_KEY),
+    getStorageData(ACTIVE_GROUP_KEY)
+  ]);
+
+  // If a newer run started while we were awaiting, abort this one
+  if (seq !== _populateGroupSelectSeq) return;
+
+  const groups = groupsRaw || {};
+  const active = typeof activeRaw === 'string' ? activeRaw : '';
   const keys = Object.keys(groups);
+
+  // Clear UI just before rendering to avoid interleaving duplicates
+  while (select.firstChild) select.removeChild(select.firstChild);
+  dropdown.innerHTML = '';
 
   if (keys.length === 0) {
     const opt = document.createElement('option');
@@ -187,6 +200,81 @@ function setupGroupDropdownInteractions() {
   });
 }
 
+// Create Group from Current - helpers and interactions
+async function getCurrentLinksSnapshot() {
+  const groups = await getStorageData(GROUPS_KEY) || {};
+  const active = await getStorageData(ACTIVE_GROUP_KEY);
+  if (active && groups[active] && groups[active].links) {
+    return groups[active].links;
+  }
+  // fallback to legacy links
+  const legacy = await getStorageData(LINKS_KEY) || {};
+  return legacy;
+}
+
+function setupCreateGroupModal() {
+  const trigger = document.getElementById('create-group');
+  const dialog = document.getElementById('create-group-dialog');
+  const form = document.getElementById('create-group-form');
+  const nameInput = document.getElementById('create-group-name');
+  const errorBox = document.getElementById('create-group-error');
+  const closeBtn = document.getElementById('close-create-group-dialog');
+  if (!trigger || !dialog || !form || !nameInput || !closeBtn) return;
+
+  function open() {
+    errorBox && (errorBox.style.display = 'none');
+    if (nameInput) nameInput.value = '';
+    dialog.showModal();
+    setTimeout(() => nameInput?.focus(), 0);
+  }
+  function close() {
+    dialog.close();
+  }
+
+  trigger.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+
+  dialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    close();
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const raw = nameInput.value || '';
+    const name = raw.trim();
+    if (!name) {
+      if (errorBox) {
+        errorBox.textContent = 'Please enter a group name.';
+        errorBox.style.display = 'block';
+      }
+      nameInput.focus();
+      return;
+    }
+
+    const groups = await getStorageData(GROUPS_KEY) || {};
+    if (groups[name]) {
+      if (errorBox) {
+        errorBox.textContent = 'A group with this name already exists.';
+        errorBox.style.display = 'block';
+      }
+      nameInput.focus();
+      return;
+    }
+
+    const snapshot = await getCurrentLinksSnapshot();
+    const newGroups = { ...groups, [name]: { links: snapshot } };
+    await setStorageData(newGroups, GROUPS_KEY);
+    await setStorageData(name, ACTIVE_GROUP_KEY);
+
+    // Refresh UI
+    await populateGroupSelect();
+    await getCategories();
+
+    close();
+  });
+}
+
 /**
  * Initialize the extension
  */
@@ -226,6 +314,8 @@ async function init() {
   await populateGroupSelect();
   // Setup custom dropdown interactions
   setupGroupDropdownInteractions();
+  // Setup Create Group modal interactions
+  setupCreateGroupModal();
 
   // Listen for changes coming from popup or other tabs to keep selector in sync
   try {

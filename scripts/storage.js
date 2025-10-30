@@ -14,6 +14,7 @@ export const CARD_LINK_CREATE_COLOR = 'card-link-create-color';
 export const CARD_LINK_SHOW_TITLE = 'card-link-show-title';
 
 export const RSS_FEEDS = 'rss-feeds';
+export const RSS_ENABLE = 'rss-enable';
 export const RSS_BG_COLOR = 'rss-bg-color';
 export const RSS_TITLE_COLOR = 'rss-title-color';
 export const RSS_DATE_COLOR = 'rss-date-color';
