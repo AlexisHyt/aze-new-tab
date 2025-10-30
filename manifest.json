@@ -1,6 +1,6 @@
 {
   "name": "Aze New Tab",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Custom your new tab with shortcuts and RSS feed",
   "manifest_version": 3,
   "chrome_url_overrides": {
