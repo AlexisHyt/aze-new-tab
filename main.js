@@ -14,6 +14,7 @@ import {
 } from "./scripts/storage.js";
 import { setupEnterListener, updateSearchInput } from "./scripts/ui-components.js";
 import { migrateGroupsFromLegacy } from './scripts/storage.js';
+import { getGoShortcuts } from "./scripts/go-shortcuts.js";
 
 // Render sequencing guard to prevent interleaved duplicate renders
 let _populateGroupSelectSeq = 0;
@@ -81,14 +82,14 @@ async function populateGroupSelect() {
 
     item.addEventListener('click', async () => {
       await setStorageData(name, ACTIVE_GROUP_KEY);
-      closeGroupDropdown();
+      closeGroupDropdown("group");
       await getCategories();
     });
     item.addEventListener('keydown', async (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         await setStorageData(name, ACTIVE_GROUP_KEY);
-        closeGroupDropdown();
+        closeGroupDropdown("group");
         await getCategories();
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
@@ -98,7 +99,7 @@ async function populateGroupSelect() {
         focusNextGroupOption(-1);
       } else if (e.key === 'Escape') {
         e.preventDefault();
-        closeGroupDropdown(true);
+        closeGroupDropdown("group", true);
       }
     });
 
@@ -120,24 +121,73 @@ async function populateGroupSelect() {
   };
 }
 
+// Populate the GO shortcuts select
+async function populateGoShortcutsSelect() {
+  const wrapper = document.querySelector('.go-shortcuts-select');
+  const select = document.getElementById('go-shortcuts-select');
+  const trigger = document.getElementById('go-shortcuts-select-trigger');
+  const dropdown = document.getElementById('go-shortcuts-dropdown');
+  if (!select || !trigger || !dropdown) return;
+
+  // Read current data first
+  const shortcuts = await getGoShortcuts();
+
+  if (!shortcuts) {
+    wrapper.remove();
+    return;
+  }
+
+  // Enable controls
+  select.disabled = false;
+  trigger.disabled = false;
+
+  // Populate native select (fallback)
+  Object.entries(shortcuts).forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    select.appendChild(opt);
+  });
+
+  // Populate custom dropdown
+  Object.entries(shortcuts).forEach((key) => {
+    const item = document.createElement('div');
+    item.className = 'go-shortcuts-option';
+    item.setAttribute('role', 'option');
+    item.setAttribute('tabindex', '0');
+    item.dataset.value = name;
+    item.onclick = () => {
+      window.location.href = key[1];
+    }
+    item.innerHTML = `
+      <div style="display: flex; flex-direction: column; overflow: hidden;">
+        <span>${key[0]}</span>
+        <span style="color: gray; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; width: 100%; overflow: hidden;">${key[1]}</span>
+      </div>
+    `;
+
+    dropdown.appendChild(item);
+  });
+}
+
 // Dropdown helpers
-function openGroupDropdown() {
-  const dropdown = document.getElementById('group-dropdown');
-  const trigger = document.getElementById('group-select-trigger');
+function openGroupDropdown(select) {
+  const dropdown = document.getElementById(`${select}-dropdown`);
+  const trigger = document.getElementById(`${select}-select-trigger`);
   if (!dropdown || !trigger || trigger.disabled) return;
   dropdown.classList.add('open');
   trigger.setAttribute('aria-expanded', 'true');
 }
-function closeGroupDropdown(focusTrigger = false) {
-  const dropdown = document.getElementById('group-dropdown');
-  const trigger = document.getElementById('group-select-trigger');
+function closeGroupDropdown(select, focusTrigger = false) {
+  const dropdown = document.getElementById(`${select}-dropdown`);
+  const trigger = document.getElementById(`${select}-select-trigger`);
   if (!dropdown || !trigger) return;
   dropdown.classList.remove('open');
   trigger.setAttribute('aria-expanded', 'false');
   if (focusTrigger) trigger.focus();
 }
-function isDropdownOpen() {
-  const dropdown = document.getElementById('group-dropdown');
+function isDropdownOpen(select) {
+  const dropdown = document.getElementById(`${select}-dropdown`);
   return dropdown && dropdown.classList.contains('open');
 }
 function getGroupOptions() {
@@ -158,20 +208,20 @@ function focusFirstGroupOption() {
   if (options.length > 0) options[0].focus();
 }
 
-function setupGroupDropdownInteractions() {
-  const trigger = document.getElementById('group-select-trigger');
-  const dropdown = document.getElementById('group-dropdown');
+function setupDropdownInteractions(select) {
+  const trigger = document.getElementById(`${select}-select-trigger`);
+  const dropdown = document.getElementById(`${select}-dropdown`);
   if (!trigger || !dropdown) return;
 
   // Trigger click toggles dropdown
   trigger.addEventListener('click', () => {
-    if (isDropdownOpen()) {
-      closeGroupDropdown();
+    if (isDropdownOpen(select)) {
+      closeGroupDropdown(select);
     } else {
-      openGroupDropdown();
+      openGroupDropdown(select);
       // focus the selected option or first
-      const selected = dropdown.querySelector('.group-option[aria-selected="true"]');
-      (selected || dropdown.querySelector('.group-option'))?.focus();
+      const selected = dropdown.querySelector(`.${select}-option[aria-selected="true"]`);
+      (selected || dropdown.querySelector(`.${select}-option`))?.focus();
     }
   });
 
@@ -179,23 +229,23 @@ function setupGroupDropdownInteractions() {
   trigger.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      openGroupDropdown();
+      openGroupDropdown(select);
       focusFirstGroupOption();
     }
   });
 
   // Click outside to close
   document.addEventListener('click', (e) => {
-    if (!isDropdownOpen()) return;
+    if (!isDropdownOpen(select)) return;
     const within = e.target === trigger || dropdown.contains(e.target);
-    if (!within) closeGroupDropdown();
+    if (!within) closeGroupDropdown(select);
   });
 
   // Escape to close when open
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && isDropdownOpen()) {
+    if (e.key === 'Escape' && isDropdownOpen(select)) {
       e.preventDefault();
-      closeGroupDropdown(true);
+      closeGroupDropdown(select, true);
     }
   });
 }
@@ -312,8 +362,10 @@ async function init() {
 
   // Populate group selector
   await populateGroupSelect();
+  await populateGoShortcutsSelect();
   // Setup custom dropdown interactions
-  setupGroupDropdownInteractions();
+  setupDropdownInteractions("group");
+  setupDropdownInteractions("go-shortcuts");
   // Setup Create Group modal interactions
   setupCreateGroupModal();
 

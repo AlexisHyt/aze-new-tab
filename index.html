@@ -53,9 +53,18 @@
 
     <!-- Content -->
     <div id="left">
-        <div class="search-wrapper">
+        <div class="search-wrapper-container">
+          <div class="search-wrapper">
             <input id="search" type="text" placeholder="Search with Google" autofocus />
             <img id="search-img" src="https://www.google.com/favicon.ico">
+          </div>
+          <div class="go-shortcuts-select">
+            <button type="button" id="go-shortcuts-select-trigger" aria-haspopup="listbox" aria-expanded="false" class="go-shortcuts-trigger">
+              <img src="assets/go.png" alt="Go" />
+            </button>
+            <div id="go-shortcuts-dropdown" class="go-shortcuts-dropdown" role="listbox" tabindex="-1" aria-labelledby="go-shortcuts-select-trigger"></div>
+            <select id="go-shortcuts-select" aria-hidden="true" tabindex="-1"></select>
+          </div>
         </div>
         <p id="time" class="time"></p>
         <div>

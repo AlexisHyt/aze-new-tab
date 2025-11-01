@@ -412,6 +412,15 @@ dialog .close-dialog {
     background: #fff;
 }
 
+.search-wrapper-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.search-wrapper-container .search-wrapper {
+    flex: 1;
+}
+
 .search-wrapper {
     position: relative;
 }
@@ -441,60 +450,22 @@ dialog .close-dialog {
     margin: 12px 0 8px;
     position: relative; /* for custom arrow */
 }
-
 .group-select-wrapper label {
     color: var(--category-color);
     font-weight: 600;
     letter-spacing: 0.3px;
 }
 
-/* Themed select */
-#group-select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-
-    font: inherit;
-    color: var(--category-color);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 9999px; /* pill like the search field */
-
-    padding: 10px 42px 10px 14px; /* leave room for arrow */
-    min-width: 180px;
-    outline: none;
-    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
-    cursor: pointer;
-}
-
-#group-select:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.25);
-}
-
-#group-select:focus {
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
-    border-color: var(--card-link-create-color);
-}
-
-#group-select:disabled,
-#group-select[disabled] {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-
-/* Make sure the selector stays readable on very bright themes */
-@media (prefers-contrast: more) {
-    #group-select {
-        border-color: rgba(255, 255, 255, 0.45);
-    }
-}
-
 /* Custom dropdown (matches trigger theme) */
-.group-select { position: relative; display: inline-block; }
+.group-select, .go-shortcuts-select {
+    position: relative;
+    display: inline-block;
+}
+.go-shortcuts-select {
+    height: 100%;
+}
 
-.group-trigger {
+.group-trigger, .go-shortcuts-trigger {
     font: inherit;
     color: var(--category-color);
     background: rgba(255, 255, 255, 0.05);
@@ -507,22 +478,29 @@ dialog .close-dialog {
     cursor: pointer;
     text-align: left;
 }
-.group-trigger:hover {
+.go-shortcuts-trigger {
+    height: 100%;
+}
+.go-shortcuts-trigger img {
+    height: 30px;
+    vertical-align: middle;
+}
+.group-trigger:hover, .go-shortcuts-trigger:hover {
     /*background: rgba(255, 255, 255, 0.08); */
     border-color: rgba(255, 255, 255, 0.0);
     background: var(--card-link-create-color);
 }
-.group-trigger:focus {
+.group-trigger:focus, .go-shortcuts-trigger:focus {
     box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
     border-color: var(--card-link-create-color);
 }
-.group-trigger[disabled] {
+.group-trigger[disabled], .go-shortcuts-trigger[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
 /* Dropdown panel */
-.group-dropdown {
+.group-dropdown, .go-shortcuts-dropdown {
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
@@ -538,7 +516,10 @@ dialog .close-dialog {
     z-index: 50;
     display: none;
 }
-.group-dropdown.open { display: block; animation: fade-slide 120ms ease-out; }
+.group-dropdown.open, .go-shortcuts-dropdown.open {
+    display: block;
+    animation: fade-slide 120ms ease-out;
+}
 
 @keyframes fade-slide {
     from { opacity: 0; transform: translateY(-4px); }
@@ -561,11 +542,32 @@ dialog .close-dialog {
 .group-option:focus { background: rgba(255, 255, 255, 0.08); outline: none; }
 .group-option .badge { color: var(--card-link-text-color); background: var(--card-link-create-color); border-radius: 9999px; padding: 2px 8px; font-size: 12px; }
 
+.go-shortcuts-option {
+    color: var(--category-color);
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.go-shortcuts-option:hover,
+.go-shortcuts-option[aria-selected="true"],
+.go-shortcuts-option:focus { background: rgba(255, 255, 255, 0.08); outline: none; }
+.go-shortcuts-option .badge { color: var(--card-link-text-color); background: var(--card-link-create-color); border-radius: 9999px; padding: 2px 8px; font-size: 12px; }
+
 /* Hide native select but keep for accessibility/fallback */
-#group-select[aria-hidden="true"] { position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; }
+#group-select[aria-hidden="true"], #go-shortcuts-select[aria-hidden="true"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
 
 /* Arrow for the custom trigger */
-.group-select .group-trigger::after {
+.group-select .group-trigger::after, .go-shortcuts-select .go-shortcuts-trigger::after {
     content: "";
     position: absolute;
     right: 16px;
