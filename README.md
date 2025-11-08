@@ -1,64 +1,33 @@
-# Aze New Tab
+This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
 
-## Overview
+## Getting Started
 
-This project is a Chrome extension designed to modify your new tab to fit your needs.
+First, run the development server:
 
-## Features
+```bash
+pnpm dev
+# or
+npm run dev
+```
 
-- Add shortcuts to your favorite webpages
-- Add a RSS feed to stay connected
-- Search through the web with your best search engine
-- Export and Import presets (or themes) and share them with your friends
+Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
 
-Inside the popup, you can customize:
-- The background (jpg, png, or gif)
-- The search engine
-- The font (In "Family Name:", set the font name from **fonts.google.com** (PS: some might not work))
-- RSS Feed
-- Colors (globally everything)
-- A few other things
+You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
 
-## Installation
+For further guidance, [visit our Documentation](https://docs.plasmo.com/)
 
-### Production Mode:
+## Making production build
 
-Simply install the extension from:<br>
-[https://chromewebstore.google.com/detail/aze-new-tab/gnlnfjlpoogelmlpbjlnppdiblpccnmh](https://chromewebstore.google.com/detail/aze-new-tab/gnlnfjlpoogelmlpbjlnppdiblpccnmh)
+Run the following:
 
-### Development Mode:
+```bash
+pnpm build
+# or
+npm run build
+```
 
-1. Clone or download the repository, and extract it to a folder on your computer.
-   ```bash
-   git clone https://github.com/AlexisHyt/aze-new-tab.git
-   cd repository-name
-   ```
-2. Open **Google Chrome** and navigate to `chrome://extensions/`.
-3. Enable **Developer mode** in the top-right corner.
-4. Click on **Load unpacked** and select the folder where the extension is located.
-5. The extension will now appear in your browser's extensions menu!
+This should create a production bundle for your extension, ready to be zipped and published to the stores.
 
-## Usage
+## Submit to the webstores
 
-- After adding the extension to Chrome, you can access its functionality by clicking on the extension's icon in the
-  browser toolbar.
-- Refer to Features if you want to discover what's possible to do.
-
-## Development
-
-If you would like to contribute or develop further features, follow these steps:
-
-1. Ensure you have **Node.js** installed.
-2. Make your changes.
-3. Reload the extension in Chrome from the extensions page (`chrome://extensions`) by clicking the **Reload** button
-   near your extension and test on your side.
-4. Submit a Pull Request to **develop** branch
-
-## Support
-
-If you encounter any issues while using this extension or require assistance, feel free to open an issue in
-the [GitHub repository](https://github.com/AlexisHyt/aze-new-tab/issues).
-
-## License
-
-This project is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute it as permitted.
+The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!

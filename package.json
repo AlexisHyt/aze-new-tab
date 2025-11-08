@@ -1,14 +1,45 @@
 {
-  "name": "customnewtab",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "name": "aze-new-tab",
+  "displayName": "Aze New Tab",
+  "version": "0.0.1",
+  "description": "Custom your new tab with shortcuts and RSS feed.",
+  "author": "AlexisH <azen0x.alexis@gmail.com>",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "package": "plasmo package"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/AlexisHyt/aze-new-tab.git"
+  "dependencies": {
+    "@flyyer/use-googlefonts": "^0.4.2",
+    "@material-tailwind/react": "^2.1.10",
+    "@plasmohq/storage": "^1.15.0",
+    "color": "^5.0.2",
+    "plasmo": "0.90.5",
+    "react": "18.2.0",
+    "react-color": "^2.19.3",
+    "react-dom": "18.2.0",
+    "react-icons": "^5.5.0"
   },
-  "private": true
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+    "@types/chrome": "0.0.258",
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "autoprefixer": "^10.4.21",
+    "crypto-browserify": "^3.12.0",
+    "postcss": "^8.5.6",
+    "prettier": "3.2.4",
+    "tailwindcss": "3",
+    "typescript": "5.3.3"
+  },
+  "manifest": {
+    "permissions": [
+      "storage"
+    ],
+    "host_permissions": [
+      "https://*/*",
+      "http://*/*"
+    ]
+  }
 }
