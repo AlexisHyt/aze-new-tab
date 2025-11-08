@@ -3,7 +3,7 @@ export const SEARCH_ENGINE = "search-engine";
 export const CUSTOM_SEARCH_ENGINE = "custom-search-engine";
 export const SEARCH_ENGINE_TEXT_COLOR = "search-engine-text-color";
 export const SEARCH_ENGINE_PLACEHOLDER_COLOR =
-	"search-engine-placeholder-color";
+  "search-engine-placeholder-color";
 export const SEARCH_ENGINE_BACKGROUND_COLOR = "search-engine-background-color";
 
 // Background

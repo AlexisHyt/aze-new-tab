@@ -9,7 +9,9 @@
 		"build": "plasmo build",
 		"package": "plasmo package",
 		"biome:check": "pnpm exec biome check",
-		"biome:fix": "pnpm exec biome check --write"
+		"biome:fix": "pnpm exec biome check --write",
+		"biome:format": "pnpm exec biome format",
+		"biome:lint": "pnpm exec biome lint"
 	},
 	"dependencies": {
 		"@flyyer/use-googlefonts": "^0.4.2",

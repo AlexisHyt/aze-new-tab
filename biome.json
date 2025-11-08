@@ -8,10 +8,14 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
-      "components/**/*.(ts|tsx)",
-      "scripts/**/*.(ts|tsx)",
-      "lib/**/*.(ts|tsx)",
-      "*.(ts|tsx)"
+      "components/**/*.ts",
+      "components/**/*.tsx",
+      "scripts/**/*.ts",
+      "scripts/**/*.tsx",
+      "lib/**/*.ts",
+      "lib/**/*.tsx",
+      "*.ts",
+      "*.tsx"
     ]
   },
   "formatter": {
@@ -21,12 +25,22 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "correctness": {
+        "noUnusedImports": "error"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      }
     }
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "double"
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "bracketSameLine": false,
+      "bracketSpacing": true,
+      "trailingCommas": "all"
     }
   },
   "assist": {
