@@ -3,38 +3,36 @@
 @tailwind utilities;
 
 main {
-    --font-family: 'Roboto', sans-serif;
-    font-family: var(--font-family), 'Roboto', sans-serif;
+	--font-family: "Roboto", sans-serif;
+	font-family: var(--font-family), "Roboto", sans-serif;
 }
-
 
 /* Custom RSS Scrollbar */
 #rss {
-    --rss-bg-color: rgba(255,255,255,1);
-    --rss-title-color: rgba(0,0,0,1);
+	--rss-bg-color: rgba(255, 255, 255, 1);
+	--rss-title-color: rgba(0, 0, 0, 1);
 }
 #rss::-webkit-scrollbar {
-    width: 4px;
+	width: 4px;
 }
 #rss::-webkit-scrollbar-track {
-    background: var(--rss-bg-color, rgba(255,255,255,1));
+	background: var(--rss-bg-color, rgba(255, 255, 255, 1));
 }
 #rss::-webkit-scrollbar-thumb {
-    background: var(--rss-title-color, rgba(0,0,0,1));
+	background: var(--rss-title-color, rgba(0, 0, 0, 1));
 }
-
 
 /* Background Hover Reactive */
 .background-hover-reactive {
-    --color-placeholder: rgba(200,200,200,1);
-    --bg-color: rgba(0,0,0,0.5);
-    --bg-color-hover: rgba(0,0,0,0.6);
+	--color-placeholder: rgba(200, 200, 200, 1);
+	--bg-color: rgba(0, 0, 0, 0.5);
+	--bg-color-hover: rgba(0, 0, 0, 0.6);
 
-    background-color: var(--bg-color);
+	background-color: var(--bg-color);
 }
 .background-hover-reactive::placeholder {
-    color: var(--color-placeholder);
+	color: var(--color-placeholder);
 }
 .background-hover-reactive:hover {
-    background-color: var(--bg-color-hover);
+	background-color: var(--bg-color-hover);
 }

@@ -1,93 +1,105 @@
-import React, { useState } from "react"
+import { useStorage } from "@plasmohq/storage/hook";
+import type React from "react";
+import { useState } from "react";
+import { MyButton } from "~components/popup/MyButton";
+import { MyInput } from "~components/popup/MyInput";
+import { darkenColor, generateUuidV4 } from "~lib/helpers";
 import {
-  Dialog,
-  DialogBody,
-  DialogFooter,
-  DialogHeader
-} from "~node_modules/@material-tailwind/react"
-import {MyInput} from "~components/popup/MyInput";
-import {MyButton} from "~components/popup/MyButton";
-import {useStorage} from "@plasmohq/storage/hook";
+	Dialog,
+	DialogBody,
+	DialogFooter,
+	DialogHeader,
+} from "~node_modules/@material-tailwind/react";
 import {
-  ACTIVE_GROUP,
-  CARD_LINK_BG_COLOR,
-  CARD_LINK_TEXT_COLOR,
-  CATEGORIES
-} from "~scripts/storage"
-import type { Category, Group } from "~scripts/popup/settingsConfig"
-import { darkenColor, generateUuidV4 } from "~lib/helpers"
-import {CARD_LINK_BG_COLOR__DEFAULT, CARD_LINK_TEXT_COLOR__DEFAULT} from "~scripts/defaultValues";
+	CARD_LINK_BG_COLOR__DEFAULT,
+	CARD_LINK_TEXT_COLOR__DEFAULT,
+} from "~scripts/defaultValues";
+import type { Category, Group } from "~scripts/popup/settingsConfig";
+import {
+	ACTIVE_GROUP,
+	CARD_LINK_BG_COLOR,
+	CARD_LINK_TEXT_COLOR,
+	CATEGORIES,
+} from "~scripts/storage";
 
 export const CategoryCreator = () => {
-  const [categories, setCategories] = useStorage(CATEGORIES, [] as Category[]);
-  const [activeGroup] = useStorage(ACTIVE_GROUP, {} as Group);
-  const [linkCardBackgroundColor] = useStorage(CARD_LINK_BG_COLOR, CARD_LINK_BG_COLOR__DEFAULT);
-  const [linkCardTextColor] = useStorage(CARD_LINK_TEXT_COLOR, CARD_LINK_TEXT_COLOR__DEFAULT);
+	const [categories, setCategories] = useStorage(CATEGORIES, [] as Category[]);
+	const [activeGroup] = useStorage(ACTIVE_GROUP, {} as Group);
+	const [linkCardBackgroundColor] = useStorage(
+		CARD_LINK_BG_COLOR,
+		CARD_LINK_BG_COLOR__DEFAULT,
+	);
+	const [linkCardTextColor] = useStorage(
+		CARD_LINK_TEXT_COLOR,
+		CARD_LINK_TEXT_COLOR__DEFAULT,
+	);
 
-  const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpen = () => {
-    setIsOpen(!isOpen)
-  };
+	const handleOpen = () => {
+		setIsOpen(!isOpen);
+	};
 
-  return (
-    <div>
-      <Dialog open={isOpen} handler={handleOpen}>
-        <DialogHeader>Create new category</DialogHeader>
-        <DialogBody>
-          <form
-            className={`flex flex-col gap-2 w-1/2 m-auto justify-center items-center`}
-            onSubmit={async (e) => {
-            e.preventDefault();
+	return (
+		<div>
+			<Dialog open={isOpen} handler={handleOpen}>
+				<DialogHeader>Create new category</DialogHeader>
+				<DialogBody>
+					<form
+						className={`flex flex-col gap-2 w-1/2 m-auto justify-center items-center`}
+						onSubmit={async (e) => {
+							e.preventDefault();
 
-            // Get form data
-            const formData = new FormData(e.target as HTMLFormElement);
-            const addCategory = {
-              id: generateUuidV4(),
-              name: formData.get("category-name") as string,
-              logo: formData.get("category-logo") as string,
-              groupId: activeGroup.id,
-            };
+							// Get form data
+							const formData = new FormData(e.target as HTMLFormElement);
+							const addCategory = {
+								id: generateUuidV4(),
+								name: formData.get("category-name") as string,
+								logo: formData.get("category-logo") as string,
+								groupId: activeGroup.id,
+							};
 
-            // Update custom search engines
-            categories.push(addCategory);
-            await setCategories(categories);
+							// Update custom search engines
+							categories.push(addCategory);
+							await setCategories(categories);
 
-            setIsOpen(false);
-          }}
-          >
-            <MyInput
-              type={"text"}
-              id={"form-category-name"}
-              name={"category-name"}
-              placeholder={"Name"}
-            />
-            <MyInput
-              type={"text"}
-              id={"form-category-logo"}
-              name={"category-logo"}
-              placeholder={"Logo"}
-            />
-            <MyButton
-              type={"submit"}
-              text={"Create"}
-              bgColor={"bg-green-500"}
-              hoverBgColor={"hover:bg-green-600"}
-            />
-          </form>
-        </DialogBody>
-      </Dialog>
-      <button
-        className="background-hover-reactive transition-all duration-300 border-none text-white rounded-full outline-none text-lg py-2 px-6"
-        style={{
-          color: linkCardTextColor,
-          "--bg-color": linkCardBackgroundColor,
-          "--bg-color-hover": darkenColor(linkCardBackgroundColor, 0.1),
-        } as React.CSSProperties}
-        onClick={handleOpen}
-      >
-        Create category
-      </button>
-    </div>
-  )
-}
+							setIsOpen(false);
+						}}
+					>
+						<MyInput
+							type={"text"}
+							id={"form-category-name"}
+							name={"category-name"}
+							placeholder={"Name"}
+						/>
+						<MyInput
+							type={"text"}
+							id={"form-category-logo"}
+							name={"category-logo"}
+							placeholder={"Logo"}
+						/>
+						<MyButton
+							type={"submit"}
+							text={"Create"}
+							bgColor={"bg-green-500"}
+							hoverBgColor={"hover:bg-green-600"}
+						/>
+					</form>
+				</DialogBody>
+			</Dialog>
+			<button
+				className="background-hover-reactive transition-all duration-300 border-none text-white rounded-full outline-none text-lg py-2 px-6"
+				style={
+					{
+						color: linkCardTextColor,
+						"--bg-color": linkCardBackgroundColor,
+						"--bg-color-hover": darkenColor(linkCardBackgroundColor, 0.1),
+					} as React.CSSProperties
+				}
+				onClick={handleOpen}
+			>
+				Create category
+			</button>
+		</div>
+	);
+};
