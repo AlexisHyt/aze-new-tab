@@ -48,16 +48,6 @@ Simply install the extension from:<br>
   browser toolbar.
 - Refer to Features if you want to discover what's possible to do.
 
-## Development
-
-If you would like to contribute or develop further features, follow these steps:
-
-1. Ensure you have **Node.js** installed.
-2. Make your changes.
-3. Reload the extension in Chrome from the extensions page (`chrome://extensions`) by clicking the **Reload** button
-   near your extension and test on your side.
-4. Submit a Pull Request to **develop** branch
-
 ## Support
 
 If you encounter any issues while using this extension or require assistance, feel free to open an issue in
