@@ -95,7 +95,7 @@ export function RSSFeed() {
     <Fragment>
       {strToBool(rssShow) && (
         <div className="w-3/4 flex flex-col items-start justify-center">
-          <div className="flex gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-4">
             {rssFeeds.map((feed) => (
               <button
                 type="button"

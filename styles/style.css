@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+*:not(.contextual):not([style^="position: fixed"] > *) {
+    opacity: 0;
+    animation: fade-in 0.5s ease-in-out forwards;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 main {
 	--font-family: "Roboto", sans-serif;
 	font-family: var(--font-family), "Roboto", sans-serif;
@@ -20,6 +34,19 @@ main {
 }
 #rss::-webkit-scrollbar-thumb {
 	background: var(--rss-title-color, rgba(0, 0, 0, 1));
+}
+#links {
+	--scrollbar-bg-color: rgba(0, 0, 0, 1);
+	--scrollbar-title-color: rgba(255, 255, 255, 1);
+}
+#links::-webkit-scrollbar {
+	width: 4px;
+}
+#links::-webkit-scrollbar-track {
+	background: var(--scrollbar-bg-color, rgba(0, 0, 0, 1));
+}
+#links::-webkit-scrollbar-thumb {
+	background: var(--scrollbar-title-color, rgba(255, 255, 255, 1));
 }
 
 /* Background Hover Reactive */

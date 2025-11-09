@@ -127,77 +127,70 @@ export const Links = () => {
           </form>
         </DialogBody>
       </Dialog>
-      {categories
-        .filter((category) => category.groupId === activeGroup.id)
-        .map((category, index) => (
-          <div key={index}>
-            <div
-              className={`relative flex items-center gap-2 text-white text-lg font-bold mt-5 mb-4 w-fit group`}
-            >
-              {category.logo && (
-                <img
-                  src={category.logo}
-                  alt={category.name}
-                  className={`h-6`}
-                />
-              )}
-              <p
-                className={`background-hover-reactive px-2 rounded`}
-                style={
-                  {
-                    color: categoryTextColor,
-                    "--bg-color": categoryBackgroundColor,
-                    "--bg-color-hover": darkenColor(
-                      categoryBackgroundColor,
-                      0.1,
-                    ),
-                  } as React.CSSProperties
-                }
+      <div
+        id="links"
+        className={`overflow-y-auto h-full`}
+        style={
+          {
+            "--scrollbar-bg-color": linkCardBackgroundColor,
+            "--scrollbar-title-color": linkCardTextColor,
+          } as React.CSSProperties
+        }
+      >
+        {categories
+          .filter((category) => category.groupId === activeGroup.id)
+          .map((category, index) => (
+            <div key={index}>
+              <div
+                className={`relative flex items-center gap-2 text-white text-lg font-bold mt-5 mb-4 w-fit group`}
               >
-                {category.name}
-              </p>
-              <LuX
-                className={`background-hover-reactive invisible group-hover:visible cursor-pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 size-4`}
-                style={
-                  {
-                    color: categoryTextColor,
-                    "--bg-color": categoryBackgroundColor,
-                    "--bg-color-hover": darkenColor(
-                      categoryBackgroundColor,
-                      0.1,
-                    ),
-                  } as React.CSSProperties
-                }
-                onClick={() => removeCategory(category)}
-              />
-            </div>
-            <div className={`flex gap-4`}>
-              {links
-                .filter((link) => link.categoryId === category.id)
-                .map((link, index) => (
-                  <a
-                    href={link.link}
-                    key={index}
-                    className={`background-hover-reactive relative size-24 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-around items-center cursor-pointer group`}
-                    style={
-                      {
-                        "--bg-color": linkCardBackgroundColor,
-                        "--bg-color-hover": darkenColor(
-                          linkCardBackgroundColor,
-                          0.1,
-                        ),
-                      } as React.CSSProperties
-                    }
-                  >
-                    {link.logo && (
-                      <img src={link.logo} alt={link.name} className={`h-12`} />
-                    )}
-                    <p style={{ color: linkCardTextColor }}>{link.name}</p>
-                    <LuX
-                      className={`background-hover-reactive invisible group-hover:visible cursor-pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 size-4`}
+                {category.logo && (
+                  <img
+                    src={category.logo}
+                    alt={category.name}
+                    className={`h-6`}
+                  />
+                )}
+                <p
+                  className={`background-hover-reactive px-2 rounded`}
+                  style={
+                    {
+                      color: categoryTextColor,
+                      "--bg-color": categoryBackgroundColor,
+                      "--bg-color-hover": darkenColor(
+                        categoryBackgroundColor,
+                        0.1,
+                      ),
+                    } as React.CSSProperties
+                  }
+                >
+                  {category.name}
+                </p>
+                <LuX
+                  className={`background-hover-reactive invisible group-hover:visible cursor-pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 size-4`}
+                  style={
+                    {
+                      color: categoryTextColor,
+                      "--bg-color": categoryBackgroundColor,
+                      "--bg-color-hover": darkenColor(
+                        categoryBackgroundColor,
+                        0.1,
+                      ),
+                    } as React.CSSProperties
+                  }
+                  onClick={() => removeCategory(category)}
+                />
+              </div>
+              <div className={`flex gap-4`}>
+                {links
+                  .filter((link) => link.categoryId === category.id)
+                  .map((link, index) => (
+                    <a
+                      href={link.link}
+                      key={index}
+                      className={`background-hover-reactive relative size-24 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-around items-center cursor-pointer group`}
                       style={
                         {
-                          color: categoryTextColor,
                           "--bg-color": linkCardBackgroundColor,
                           "--bg-color-hover": darkenColor(
                             linkCardBackgroundColor,
@@ -205,36 +198,58 @@ export const Links = () => {
                           ),
                         } as React.CSSProperties
                       }
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        removeLink(link);
-                      }}
-                    />
-                  </a>
-                ))}
-              <div
-                className={`background-hover-reactive size-24 hover:-translate-y-1 transition-all duration-300 text-white flex justify-center items-center text-6xl cursor-pointer`}
-                style={
-                  {
-                    "--bg-color": linkCardBackgroundColor,
-                    "--bg-color-hover": darkenColor(
-                      linkCardBackgroundColor,
-                      0.1,
-                    ),
-                  } as React.CSSProperties
-                }
-              >
-                <LuPlus
-                  onClick={() => {
-                    setSelectedCategory(category);
-                    setIsOpen(true);
-                  }}
-                />
+                    >
+                      {link.logo && (
+                        <img
+                          src={link.logo}
+                          alt={link.name}
+                          className={`h-12`}
+                        />
+                      )}
+                      <p style={{ color: linkCardTextColor }}>{link.name}</p>
+                      <LuX
+                        className={`background-hover-reactive invisible group-hover:visible cursor-pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 size-4`}
+                        style={
+                          {
+                            color: categoryTextColor,
+                            "--bg-color": linkCardBackgroundColor,
+                            "--bg-color-hover": darkenColor(
+                              linkCardBackgroundColor,
+                              0.1,
+                            ),
+                          } as React.CSSProperties
+                        }
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          removeLink(link);
+                        }}
+                      />
+                    </a>
+                  ))}
+                <div
+                  className={`background-hover-reactive size-24 hover:-translate-y-1 transition-all duration-300 text-white flex justify-center items-center text-6xl cursor-pointer`}
+                  style={
+                    {
+                      "--bg-color": linkCardBackgroundColor,
+                      "--bg-color-hover": darkenColor(
+                        linkCardBackgroundColor,
+                        0.1,
+                      ),
+                    } as React.CSSProperties
+                  }
+                >
+                  <LuPlus
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setIsOpen(true);
+                    }}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+      </div>
     </Fragment>
   );
 };

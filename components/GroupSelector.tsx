@@ -145,7 +145,7 @@ export const GroupSelector = () => {
               {activeGroup.name}
             </button>
             {isDropdownOpen && (
-              <div className="absolute rounded-md bg-black mt-2 w-auto flex flex-col gap-2 z-50">
+              <div className="absolute contextual rounded-md bg-black border border-white mt-2 w-auto flex flex-col gap-2 z-50">
                 {groups.map((group, index) => (
                   <button
                     key={index}

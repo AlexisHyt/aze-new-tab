@@ -42,14 +42,20 @@ export default function NewTabPage() {
         className={`grid grid-cols-2 gap-5 h-screen overflow-hidden`}
         style={{ "--font-family": fontFamily } as React.CSSProperties}
       >
-        <div className={`p-16 flex flex-col justify-start gap-5`}>
-          <Search />
-          <Clock />
-          <div className={`flex items-center gap-5`}>
-            <GroupSelector />
-            {activeGroup.id && <CategoryCreator />}
+        <div
+          className={`px-16 py-8 flex flex-col justify-around gap-5 max-h-screen`}
+        >
+          <div className={`h-[40vh] flex flex-col justify-start gap-5 z-50`}>
+            <Search />
+            <Clock />
+            <div className={`flex items-center gap-5 z-50`}>
+              <GroupSelector />
+              {activeGroup.id && <CategoryCreator />}
+            </div>
           </div>
-          <Links />
+          <div className={`h-full overflow-y-auto`}>
+            <Links />
+          </div>
         </div>
         <div className={`p-16 flex justify-end`}>
           <RSSFeed />

@@ -1,8 +1,8 @@
 {
 	"name": "aze-new-tab",
-	"displayName": "Aze New Tab",
-	"version": "0.0.1",
-	"description": "Custom your new tab with shortcuts and RSS feed.",
+	"displayName": "ANT - Custom new tab",
+	"version": "2.0.0",
+	"description": "Customize your new tab page with your shortcuts and your RSS feeds.",
 	"author": "AlexisH <azen0x.alexis@gmail.com>",
 	"scripts": {
 		"dev": "plasmo dev",
