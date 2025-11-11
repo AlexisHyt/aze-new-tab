@@ -9,14 +9,17 @@ export const CLOCKS = {
   DEFAULT: {
     label: "Default",
     value: "default",
+    component: <Clock1 />,
   },
   EMOJIS: {
     label: "Emojis",
     value: "emojis",
+    component: <Clock2 />,
   },
   DIGITALCLOCKS: {
     label: "Digital Clocks",
     value: "digitalclocks",
+    component: <Clock3 />,
   },
 };
 
@@ -24,16 +27,15 @@ export function Clock() {
   const [clockStyle] = useStorage(CLOCK_STYLE, CLOCK_STYLE__DEFAULT);
 
   const chooseClock = () => {
-    switch (clockStyle) {
-      case CLOCKS.DEFAULT.value:
-        return <Clock1 />;
-      case CLOCKS.EMOJIS.value:
-        return <Clock2 />;
-      case CLOCKS.DIGITALCLOCKS.value:
-        return <Clock3 />;
-      default:
-        return <Clock1 />;
+    const usedClock = Object.entries(CLOCKS).find(
+      ([, { value }]) => value === clockStyle,
+    );
+
+    if (!usedClock) {
+      return <Clock1 />;
     }
+
+    return usedClock[1].component;
   };
 
   return <>{chooseClock()}</>;

@@ -33,7 +33,7 @@ export function Search() {
   );
 
   return (
-    <div className="relative">
+    <div className="relative flex-1">
       <input
         type="text"
         placeholder={`Search with ${searchEngine.name}`}

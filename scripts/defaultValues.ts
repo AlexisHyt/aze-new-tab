@@ -8,6 +8,8 @@ export const CLOCK_STYLE__DEFAULT = "default";
 export const CLOCK_SHOW_SECONDS__DEFAULT = "true";
 export const CLOCK_COLOR__DEFAULT = "rgba(255,255,255,1)";
 export const CLOCK_SHADOW_COLOR__DEFAULT = "rgba(0,0,0,1)";
+export const CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING__DEFAULT =
+  "cubic-bezier(.87,.08,.04,.94)";
 
 // RSS
 export const RSS_SHOW__DEFAULT = "true";

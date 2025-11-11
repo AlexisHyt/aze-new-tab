@@ -4,6 +4,7 @@ import { useStorage } from "@plasmohq/storage/hook";
 import type React from "react";
 import { CategoryCreator } from "~components/CategoryCreator";
 import { Clock } from "~components/Clock";
+import { GoShortcut } from "~components/GoShortcut";
 import { GroupSelector } from "~components/GroupSelector";
 import { Links } from "~components/Links";
 import { RSSFeed } from "~components/RSSFeed";
@@ -46,7 +47,10 @@ export default function NewTabPage() {
           className={`px-16 py-8 flex flex-col justify-around gap-5 max-h-screen`}
         >
           <div className={`h-[40vh] flex flex-col justify-start gap-5 z-50`}>
-            <Search />
+            <div className={`flex items-center gap-5 z-50`}>
+              <Search />
+              <GoShortcut />
+            </div>
             <Clock />
             <div className={`flex items-center gap-5 z-50`}>
               <GroupSelector />

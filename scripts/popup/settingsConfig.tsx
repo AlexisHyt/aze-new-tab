@@ -28,6 +28,7 @@ import {
   CATEGORY_BG_COLOR__DEFAULT,
   CATEGORY_TEXT_COLOR__DEFAULT,
   CLOCK_COLOR__DEFAULT,
+  CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING__DEFAULT,
   CLOCK_SHADOW_COLOR__DEFAULT,
   CLOCK_SHOW_SECONDS__DEFAULT,
   CLOCK_STYLE__DEFAULT,
@@ -60,6 +61,7 @@ import {
   CATEGORY_BG_COLOR,
   CATEGORY_TEXT_COLOR,
   CLOCK_COLOR,
+  CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING,
   CLOCK_SHADOW_COLOR,
   CLOCK_SHOW_SECONDS,
   CLOCK_STYLE,
@@ -134,6 +136,14 @@ export const useSettingsConfig = (): ISetting[] => {
   const [clockShowSeconds, setClockShowSeconds] = useStorage(
     CLOCK_SHOW_SECONDS,
     CLOCK_SHOW_SECONDS__DEFAULT,
+  );
+  const [
+    clockDigitalClocksAnimationTiming,
+    setClockDigitalClocksAnimationTiming,
+    { setRenderValue: setClockDigitalClocksAnimationTimingRenderValue },
+  ] = useStorage(
+    CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING,
+    CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING__DEFAULT,
   );
   // RSS
   const [rssShow, setRssShow] = useStorage(RSS_ENABLE, RSS_SHOW__DEFAULT);
@@ -473,6 +483,57 @@ export const useSettingsConfig = (): ISetting[] => {
               />
             </div>
           </form>
+        </Fragment>
+      ),
+    },
+    {
+      tabIndex: 2,
+      form: (
+        <Fragment>
+          {clockStyle === CLOCKS.DIGITALCLOCKS.value && (
+            <form
+              className={`col-span-full`}
+              onSubmit={async (e) => {
+                e.preventDefault();
+
+                // Get form data
+                const formData = new FormData(e.target as HTMLFormElement);
+                const value = formData.get("animationTiming") as string;
+
+                // Update search engine
+                await setClockDigitalClocksAnimationTiming(value);
+
+                // Toast it
+                await setToastData({
+                  type: "success",
+                  text: "Clock animation changed!",
+                } as ToastData);
+              }}
+            >
+              <PopupLabel
+                text={"Animation Timing"}
+                htmlFor={"form-animationTiming"}
+              />
+              <div className={`flex items-center gap-2`}>
+                <PopupInput
+                  type={"text"}
+                  name={"animationTiming"}
+                  id={"form-animationTiming"}
+                  placeholder={"cubic-bezier(.87,.08,.04,.94)"}
+                  value={clockDigitalClocksAnimationTiming}
+                  onChange={(e) =>
+                    setClockDigitalClocksAnimationTimingRenderValue(
+                      e.target.value,
+                    )
+                  }
+                />
+                <PopupButton type={"submit"} text={"Change"} />
+              </div>
+              <PopupHelper
+                text={`It can be any value to set in 'animation-timing-function' css property (ex: linear, ease-in-out, cubic-bezier, steps...)`}
+              />
+            </form>
+          )}
         </Fragment>
       ),
     },

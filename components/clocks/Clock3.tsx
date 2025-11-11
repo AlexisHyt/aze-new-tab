@@ -3,11 +3,13 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import {
   CLOCK_COLOR__DEFAULT,
+  CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING__DEFAULT,
   CLOCK_SHADOW_COLOR__DEFAULT,
   CLOCK_SHOW_SECONDS__DEFAULT,
 } from "~scripts/defaultValues";
 import {
   CLOCK_COLOR,
+  CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING,
   CLOCK_SHADOW_COLOR,
   CLOCK_SHOW_SECONDS,
 } from "~scripts/storage";
@@ -294,6 +296,10 @@ export function Clock3() {
     CLOCK_SHOW_SECONDS,
     CLOCK_SHOW_SECONDS__DEFAULT,
   );
+  const [clockDigitalClocksAnimationTiming] = useStorage(
+    CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING,
+    CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING__DEFAULT,
+  );
   const [digitsRotations, setDigitsRotations] = useState({
     "hour-tens": digits["0"],
     "hour-ones": digits["0"],
@@ -357,18 +363,22 @@ export function Clock3() {
                     {
                       "--tw-rotate": `${rotation[digitsRotations["hour-tens"][index]][0]}deg`,
                       backgroundColor: clockColor,
+                      transitionTimingFunction:
+                        clockDigitalClocksAnimationTiming,
                     } as React.CSSProperties
                   }
-                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                 ></div>
                 <div
                   style={
                     {
                       "--tw-rotate": `${rotation[digitsRotations["hour-tens"][index]][1]}deg`,
                       backgroundColor: clockColor,
+                      transitionTimingFunction:
+                        clockDigitalClocksAnimationTiming,
                     } as React.CSSProperties
                   }
-                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                 ></div>
               </div>
             ))}
@@ -384,18 +394,22 @@ export function Clock3() {
                     {
                       "--tw-rotate": `${rotation[digitsRotations["hour-ones"][index]][0]}deg`,
                       backgroundColor: clockColor,
+                      transitionTimingFunction:
+                        clockDigitalClocksAnimationTiming,
                     } as React.CSSProperties
                   }
-                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                 ></div>
                 <div
                   style={
                     {
                       "--tw-rotate": `${rotation[digitsRotations["hour-ones"][index]][1]}deg`,
                       backgroundColor: clockColor,
+                      transitionTimingFunction:
+                        clockDigitalClocksAnimationTiming,
                     } as React.CSSProperties
                   }
-                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                 ></div>
               </div>
             ))}
@@ -423,18 +437,22 @@ export function Clock3() {
                     {
                       "--tw-rotate": `${rotation[digitsRotations["minute-tens"][index]][0]}deg`,
                       backgroundColor: clockColor,
+                      transitionTimingFunction:
+                        clockDigitalClocksAnimationTiming,
                     } as React.CSSProperties
                   }
-                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                 ></div>
                 <div
                   style={
                     {
                       "--tw-rotate": `${rotation[digitsRotations["minute-tens"][index]][1]}deg`,
                       backgroundColor: clockColor,
+                      transitionTimingFunction:
+                        clockDigitalClocksAnimationTiming,
                     } as React.CSSProperties
                   }
-                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                 ></div>
               </div>
             ))}
@@ -450,18 +468,22 @@ export function Clock3() {
                     {
                       "--tw-rotate": `${rotation[digitsRotations["minute-ones"][index]][0]}deg`,
                       backgroundColor: clockColor,
+                      transitionTimingFunction:
+                        clockDigitalClocksAnimationTiming,
                     } as React.CSSProperties
                   }
-                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                 ></div>
                 <div
                   style={
                     {
                       "--tw-rotate": `${rotation[digitsRotations["minute-ones"][index]][1]}deg`,
                       backgroundColor: clockColor,
+                      transitionTimingFunction:
+                        clockDigitalClocksAnimationTiming,
                     } as React.CSSProperties
                   }
-                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                  className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                 ></div>
               </div>
             ))}
@@ -491,18 +513,22 @@ export function Clock3() {
                         {
                           "--tw-rotate": `${rotation[digitsRotations["second-tens"][index]][0]}deg`,
                           backgroundColor: clockColor,
+                          transitionTimingFunction:
+                            clockDigitalClocksAnimationTiming,
                         } as React.CSSProperties
                       }
-                      className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                      className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                     ></div>
                     <div
                       style={
                         {
                           "--tw-rotate": `${rotation[digitsRotations["second-tens"][index]][1]}deg`,
                           backgroundColor: clockColor,
+                          transitionTimingFunction:
+                            clockDigitalClocksAnimationTiming,
                         } as React.CSSProperties
                       }
-                      className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                      className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                     ></div>
                   </div>
                 ))}
@@ -518,18 +544,22 @@ export function Clock3() {
                         {
                           "--tw-rotate": `${rotation[digitsRotations["second-ones"][index]][0]}deg`,
                           backgroundColor: clockColor,
+                          transitionTimingFunction:
+                            clockDigitalClocksAnimationTiming,
                         } as React.CSSProperties
                       }
-                      className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                      className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                     ></div>
                     <div
                       style={
                         {
                           "--tw-rotate": `${rotation[digitsRotations["second-ones"][index]][1]}deg`,
                           backgroundColor: clockColor,
+                          transitionTimingFunction:
+                            clockDigitalClocksAnimationTiming,
                         } as React.CSSProperties
                       }
-                      className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-250 rounded-full`}
+                      className={`w-1/2 h-1 absolute origin-[center_left] top-1/2 left-1/2 -translate-y-1/2 transition-all duration-1000 rounded-full`}
                     ></div>
                   </div>
                 ))}

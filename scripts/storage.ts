@@ -14,6 +14,8 @@ export const CLOCK_COLOR = "clock-color";
 export const CLOCK_SHADOW_COLOR = "clock-shadow-color";
 export const CLOCK_STYLE = "clock-style";
 export const CLOCK_SHOW_SECONDS = "clock-show-seconds";
+export const CLOCK_DIGITAL_CLOCKS_ANIMATION_TIMING =
+  "clock-digital-clocks-animation-timing";
 
 // RSS
 export const RSS_ENABLE = "rss-enable";

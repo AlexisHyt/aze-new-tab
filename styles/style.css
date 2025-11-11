@@ -22,6 +22,16 @@ main {
 }
 
 /* Custom RSS Scrollbar */
+::-webkit-scrollbar {
+	width: 4px;
+}
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 1);
+}
+::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 1);
+}
+
 #rss {
 	--rss-bg-color: rgba(255, 255, 255, 1);
 	--rss-title-color: rgba(0, 0, 0, 1);
@@ -35,6 +45,7 @@ main {
 #rss::-webkit-scrollbar-thumb {
 	background: var(--rss-title-color, rgba(0, 0, 0, 1));
 }
+
 #links {
 	--scrollbar-bg-color: rgba(0, 0, 0, 1);
 	--scrollbar-title-color: rgba(255, 255, 255, 1);
