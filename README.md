@@ -13,13 +13,13 @@ I highly recommend you to uninstall the extension and install it again. Exportin
 - Add shortcuts to your favorite webpages
 - Add a RSS feed to stay connected
 - Search through the web with your best search engine
-- Export and Import presets (or themes) and share them with your friends
+- Export and Import presets and share them with your friends
 
 Inside the popup, you can customize:
 - The background (jpg, png, or gif)
 - The search engine
-- The font (In "Family Name:", set the font name from **fonts.google.com**
 - RSS Feed
+- The font (In "Family Name:", set the font name from **fonts.google.com**
 - Colors (globally everything)
 - A few other things
 
@@ -42,11 +42,6 @@ Simply install the extension from:<br>
 4. Click on **Load unpacked** and select the folder where the extension is located.
 5. The extension will now appear in your browser's extensions menu!
 
-## Usage
-
-- After adding the extension to Chrome, you can access its functionality by clicking on the extension's icon in the
-  browser toolbar.
-- Refer to Features if you want to discover what's possible to do.
 
 ## Support
 
