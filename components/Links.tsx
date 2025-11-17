@@ -1,9 +1,10 @@
 import { useStorage } from "@plasmohq/storage/hook";
 import type React from "react";
 import { Fragment, useState } from "react";
-import { LuPlus, LuX } from "react-icons/lu";
+import { LuPencil, LuPlus, LuX } from "react-icons/lu";
 import { PopupButton } from "~components/popup/PopupButton";
 import { PopupInput } from "~components/popup/PopupInput";
+import { getFaviconFromUrl } from "~lib/favicon";
 import { darkenColor, generateUuidV4 } from "~lib/helpers";
 import {
   Dialog,
@@ -49,6 +50,7 @@ export const Links = () => {
   );
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isCategoryUpdateOpen, setIsCategoryUpdateOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
     null,
   );
@@ -56,6 +58,14 @@ export const Links = () => {
   const handleOpen = () => {
     setIsOpen(!isOpen);
   };
+  const handleCategoryUpdateOpen = () => {
+    setIsCategoryUpdateOpen(!isOpen);
+  };
+
+  const [updatingLink, setUpdatingLink] = useState<ILink | null>(null);
+  const [updatingCategory, setUpdatingCategory] = useState<ICategory | null>(
+    null,
+  );
 
   const removeCategory = async (category: ICategory) => {
     const categoriesClone = [...categories];
@@ -71,7 +81,9 @@ export const Links = () => {
   return (
     <Fragment>
       <Dialog open={isOpen} handler={handleOpen} placeholder={""}>
-        <DialogHeader placeholder={""}>Create shortcut</DialogHeader>
+        <DialogHeader placeholder={""}>
+          {updatingLink?.id ? "Update shortcut" : "Create shortcut"}
+        </DialogHeader>
         <DialogBody placeholder={""}>
           <form
             className={`flex flex-col gap-2 w-1/2 m-auto justify-center items-center`}
@@ -80,47 +92,157 @@ export const Links = () => {
 
               // Get form data
               const formData = new FormData(e.target as HTMLFormElement);
-              const addLink = {
-                id: generateUuidV4(),
-                name: formData.get("link-name") as string,
-                link: formData.get("link-link") as string,
-                logo:
-                  (formData.get("link-logo") as string) ||
-                  `${formData.get("link-link")}/favicon.ico` ||
-                  "",
-                categoryId: selectedCategory.id,
-              };
+              if (
+                formData.get("link-id") === null ||
+                formData.get("link-id") === ""
+              ) {
+                const url = formData.get("link-link") as string;
 
-              // Update custom search engines
-              const linksCopy = [...links];
-              linksCopy.push(addLink);
-              await setLinks(linksCopy);
+                const addLink = {
+                  id: generateUuidV4(),
+                  name: formData.get("link-name") as string,
+                  link: url,
+                  logo:
+                    (formData.get("link-logo") as string) ||
+                    (await getFaviconFromUrl(url)) ||
+                    `${url}/favicon.ico` ||
+                    "",
+                  categoryId: selectedCategory.id,
+                };
 
+                // Update custom search engines
+                const linksCopy = [...links];
+                linksCopy.push(addLink);
+                await setLinks(linksCopy);
+              } else {
+                const linksCopy = links.map((link) => {
+                  if (link.id === formData.get("link-id")) {
+                    return {
+                      ...link,
+                      name: formData.get("link-name") as string,
+                      link: formData.get("link-link") as string,
+                      logo: formData.get("link-logo") as string,
+                    };
+                  }
+                  return link;
+                });
+
+                await setLinks(linksCopy);
+              }
+
+              setUpdatingLink(null);
               setIsOpen(false);
               setSelectedCategory(null);
             }}
           >
+            <input
+              type="hidden"
+              name="link-id"
+              value={updatingLink?.id || ""}
+            />
             <PopupInput
               type={"text"}
               id={"form-link-name"}
               name={"link-name"}
               placeholder={"Name"}
+              value={updatingLink?.name || ""}
+              onChange={(e) => {
+                setUpdatingLink({ ...updatingLink, name: e.target.value });
+              }}
             />
             <PopupInput
               type={"text"}
               id={"form-link-link"}
               name={"link-link"}
               placeholder={"Link"}
+              value={updatingLink?.link || ""}
+              onChange={(e) => {
+                setUpdatingLink({ ...updatingLink, link: e.target.value });
+              }}
             />
             <PopupInput
               type={"text"}
               id={"form-link-logo"}
               name={"link-logo"}
               placeholder={"Logo"}
+              value={updatingLink?.logo || ""}
+              onChange={(e) => {
+                setUpdatingLink({ ...updatingLink, logo: e.target.value });
+              }}
             />
             <PopupButton
               type={"submit"}
-              text={"Create"}
+              text={updatingLink?.id ? "Update" : "Create"}
+              bgColor={"bg-green-500"}
+              hoverBgColor={"hover:bg-green-600"}
+            />
+          </form>
+        </DialogBody>
+      </Dialog>
+      <Dialog
+        open={isCategoryUpdateOpen}
+        handler={handleCategoryUpdateOpen}
+        placeholder={""}
+      >
+        <DialogHeader placeholder={""}>Update category</DialogHeader>
+        <DialogBody placeholder={""}>
+          <form
+            className={`flex flex-col gap-2 w-1/2 m-auto justify-center items-center`}
+            onSubmit={async (e) => {
+              e.preventDefault();
+
+              const formData = new FormData(e.target as HTMLFormElement);
+              const categoriesCopy = categories.map((category) => {
+                if (category.id === formData.get("category-id")) {
+                  return {
+                    ...category,
+                    name: formData.get("category-name") as string,
+                    logo: formData.get("category-logo") as string,
+                  };
+                }
+                return category;
+              });
+
+              await setCategories(categoriesCopy);
+              setUpdatingCategory(null);
+
+              setIsCategoryUpdateOpen(false);
+            }}
+          >
+            <input
+              type={"hidden"}
+              name={"category-id"}
+              value={updatingCategory?.id || ""}
+            />
+            <PopupInput
+              type={"text"}
+              id={"form-category-name"}
+              name={"category-name"}
+              placeholder={"Name"}
+              value={updatingCategory?.name || ""}
+              onChange={(e) => {
+                setUpdatingCategory({
+                  ...updatingCategory,
+                  name: e.target.value,
+                });
+              }}
+            />
+            <PopupInput
+              type={"text"}
+              id={"form-category-logo"}
+              name={"category-logo"}
+              placeholder={"Logo"}
+              value={updatingCategory?.logo || ""}
+              onChange={(e) => {
+                setUpdatingCategory({
+                  ...updatingCategory,
+                  logo: e.target.value,
+                });
+              }}
+            />
+            <PopupButton
+              type={"submit"}
+              text={"Update"}
               bgColor={"bg-green-500"}
               hoverBgColor={"hover:bg-green-600"}
             />
@@ -166,6 +288,23 @@ export const Links = () => {
                 >
                   {category.name}
                 </p>
+                <LuPencil
+                  className={`background-hover-reactive invisible group-hover:visible cursor-pointer absolute top-0 right-4 translate-x-1/2 -translate-y-1/2 size-4`}
+                  style={
+                    {
+                      color: categoryTextColor,
+                      "--bg-color": categoryBackgroundColor,
+                      "--bg-color-hover": darkenColor(
+                        categoryBackgroundColor,
+                        0.1,
+                      ),
+                    } as React.CSSProperties
+                  }
+                  onClick={() => {
+                    setUpdatingCategory(category);
+                    setIsCategoryUpdateOpen(true);
+                  }}
+                />
                 <LuX
                   className={`background-hover-reactive invisible group-hover:visible cursor-pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 size-4`}
                   style={
@@ -188,7 +327,7 @@ export const Links = () => {
                     <a
                       href={link.link}
                       key={index}
-                      className={`background-hover-reactive relative size-24 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-around items-center cursor-pointer group`}
+                      className={`background-hover-reactive aspect-square relative size-24 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-around items-center cursor-pointer group`}
                       style={
                         {
                           "--bg-color": linkCardBackgroundColor,
@@ -207,6 +346,25 @@ export const Links = () => {
                         />
                       )}
                       <p style={{ color: linkCardTextColor }}>{link.name}</p>
+                      <LuPencil
+                        className={`background-hover-reactive invisible group-hover:visible cursor-pointer absolute top-0 right-4 translate-x-1/2 -translate-y-1/2 size-4`}
+                        style={
+                          {
+                            color: categoryTextColor,
+                            "--bg-color": linkCardBackgroundColor,
+                            "--bg-color-hover": darkenColor(
+                              linkCardBackgroundColor,
+                              0.1,
+                            ),
+                          } as React.CSSProperties
+                        }
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setUpdatingLink(link);
+                          setIsOpen(true);
+                        }}
+                      />
                       <LuX
                         className={`background-hover-reactive invisible group-hover:visible cursor-pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 size-4`}
                         style={
@@ -222,13 +380,14 @@ export const Links = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
+                          setUpdatingLink(null);
                           removeLink(link);
                         }}
                       />
                     </a>
                   ))}
                 <div
-                  className={`background-hover-reactive size-24 hover:-translate-y-1 transition-all duration-300 text-white flex justify-center items-center text-6xl cursor-pointer`}
+                  className={`background-hover-reactive aspect-square size-24 hover:-translate-y-1 transition-all duration-300 text-white flex justify-center items-center text-6xl cursor-pointer`}
                   style={
                     {
                       "--bg-color": linkCardBackgroundColor,
@@ -242,6 +401,7 @@ export const Links = () => {
                   <LuPlus
                     onClick={() => {
                       setSelectedCategory(category);
+                      setUpdatingLink(null);
                       setIsOpen(true);
                     }}
                   />

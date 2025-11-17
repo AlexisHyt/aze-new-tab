@@ -1,5 +1,5 @@
 import { useStorage } from "@plasmohq/storage/hook";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ChromePicker } from "react-color";
 import { CLOCKS } from "~components/Clock";
 import { PopupHelper } from "~components/PopupHelper";
@@ -170,7 +170,7 @@ export const useSettingsConfig = (): ISetting[] => {
   const [rssActive, setRssActive] = useStorage(ACTIVE_RSS_FEED, {} as IRSSFeed);
   const [rssFeeds, setRssFeeds] = useStorage(RSS_FEEDS, [] as IRSSFeed[]);
   // Groups
-  const [groups, setGroups] = useStorage(GROUPS, []);
+  const [groups, setGroups] = useStorage(GROUPS, [] as IGroup[]);
   const [_activeGroup, setActiveGroup] = useStorage(ACTIVE_GROUP, {} as IGroup);
   // Links & Categories
   const [
@@ -202,7 +202,23 @@ export const useSettingsConfig = (): ISetting[] => {
   // Preset
   const [presets, setPresets] = useStorage(PRESETS, [] as IPreset[]);
 
+  const [groupSelected, setGroupSelected] = useState<IGroup | null>(null);
+
   const [_, setToastData] = useStorage("toastData", {});
+
+  const [selectGroups, setSelectGroups] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Apply on groups load
+  useEffect(() => {
+    if (!groupSelected) {
+      setGroupSelected(groups[0]);
+    }
+    console.log("groups");
+    console.log(groups);
+    setSelectGroups(getDataForOptions(groups));
+  }, [groups]);
 
   return [
     {
@@ -902,6 +918,97 @@ export const useSettingsConfig = (): ISetting[] => {
 
               // Get form data
               const formData = new FormData(e.target as HTMLFormElement);
+              const formGroup: IGroup = JSON.parse(
+                formData.get("group") as string,
+              );
+
+              let updatedGroup: IGroup = {
+                id: "",
+                name: "",
+                logo: "",
+              };
+
+              // Remove the selected rss feed
+              const groupsCopy = groups.map((group) => {
+                if (group.id === formGroup.id) {
+                  console.log("Updating: " + group.name);
+                  updatedGroup = {
+                    ...group,
+                    name: formData.get("form-upt-name") as string,
+                    logo: formData.get("form-upt-logo") as string,
+                  } as IGroup;
+                  return updatedGroup;
+                }
+                return group;
+              });
+
+              // Update rss feed
+              console.log("groupsCopy");
+              console.log(groupsCopy);
+              await setGroups(groupsCopy);
+              await setActiveGroup(updatedGroup);
+
+              // Toast it
+              await setToastData({
+                type: "success",
+                text: "Group updated!",
+              } as ToastData);
+            }}
+          >
+            <PopupLabel text={"Update Group"} htmlFor={"form-group-del"} />
+            <div className={`flex items-center gap-2`}>
+              <PopupSelect
+                id={"form-group-del"}
+                name={"group"}
+                options={selectGroups}
+                onChange={(e) => {
+                  setGroupSelected(JSON.parse(e.target.value));
+                }}
+              />
+              <PopupInput
+                type={"text"}
+                name={"form-upt-name"}
+                value={groupSelected?.name || ""}
+                onChange={(e) => {
+                  setGroupSelected({
+                    ...groupSelected,
+                    name: e.target.value,
+                  });
+                }}
+              />
+              <PopupInput
+                type={"text"}
+                name={"form-upt-logo"}
+                value={groupSelected?.logo || ""}
+                onChange={(e) => {
+                  setGroupSelected({
+                    ...groupSelected,
+                    logo: e.target.value,
+                  });
+                }}
+              />
+              <PopupButton
+                type={"submit"}
+                text={"Update"}
+                bgColor={"bg-green-500"}
+                hoverBgColor={"hover:bg-green-600"}
+              />
+            </div>
+          </form>
+        </Fragment>
+      ),
+    },
+    {
+      tabIndex: 5,
+      form: (
+        <Fragment>
+          <form
+            className={`col-span-full`}
+            onSubmit={async (e) => {
+              e.preventDefault();
+
+              // Get form data
+              const formData = new FormData(e.target as HTMLFormElement);
               const group: IGroup = JSON.parse(formData.get("group") as string);
 
               // Remove the selected rss feed
@@ -919,7 +1026,7 @@ export const useSettingsConfig = (): ISetting[] => {
               } as ToastData);
             }}
           >
-            <PopupLabel text={"Remove Group Feed"} htmlFor={"form-group-del"} />
+            <PopupLabel text={"Remove Group"} htmlFor={"form-group-del"} />
             <div className={`flex items-center gap-2`}>
               <PopupSelect
                 id={"form-group-del"}
