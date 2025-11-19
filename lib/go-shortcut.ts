@@ -1,5 +1,5 @@
-// const extGoId = "kbpkgjiamlggepaphkhbmigkhejkkdbn";
-const extGoId = "iclldljopgnfmmeibicacablgcfkaddj";
+const extGoId = "kbpkgjiamlggepaphkhbmigkhejkkdbn"; // Prod
+// const extGoId = "iclldljopgnfmmeibicacablgcfkaddj"; // Dev
 
 export interface Shortcuts {
   [key: string]: string;

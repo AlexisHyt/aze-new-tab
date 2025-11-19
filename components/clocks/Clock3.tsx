@@ -1,3 +1,4 @@
+// Design from: https://github.com/githyperplexed/clock-of-clocks
 import { useStorage } from "@plasmohq/storage/hook";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -316,7 +317,7 @@ export function Clock3() {
       const minutes = now.getMinutes().toString().padStart(2, "0");
       const seconds = now.getSeconds().toString().padStart(2, "0");
 
-      if (clockShowSeconds) {
+      if (clockShowSeconds === "true") {
         setDigitsRotations({
           "hour-tens": digits[hours[0]],
           "hour-ones": digits[hours[1]],
@@ -489,7 +490,7 @@ export function Clock3() {
             ))}
           </div>
         </div>
-        {clockShowSeconds && (
+        {clockShowSeconds === "true" && (
           <>
             <div className="flex flex-col justify-end items-end gap-4 mx-4 h-full">
               <div

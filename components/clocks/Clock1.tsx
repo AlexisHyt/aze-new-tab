@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   CLOCK_COLOR__DEFAULT,
   CLOCK_SHADOW_COLOR__DEFAULT,
+  CLOCK_SHOW_SECONDS__DEFAULT,
 } from "~scripts/defaultValues";
 import {
   CLOCK_COLOR,
@@ -13,7 +14,10 @@ import {
 
 export function Clock1() {
   const [time, setTime] = useState("");
-  const [clockShowSeconds, _] = useStorage(CLOCK_SHOW_SECONDS, true);
+  const [clockShowSeconds, _] = useStorage(
+    CLOCK_SHOW_SECONDS,
+    CLOCK_SHOW_SECONDS__DEFAULT,
+  );
 
   const [clockColor] = useStorage(CLOCK_COLOR, CLOCK_COLOR__DEFAULT);
   const [clockShadowColor] = useStorage(
@@ -29,7 +33,7 @@ export function Clock1() {
       const seconds = now.getSeconds().toString().padStart(2, "0");
 
       setTime(
-        clockShowSeconds
+        clockShowSeconds === "true"
           ? `${hours}:${minutes}:${seconds}`
           : `${hours}:${minutes}`,
       );
@@ -40,7 +44,7 @@ export function Clock1() {
 
   return (
     <div
-      className={`font-bold drop-shadow-[0_2px_2px_var(--drop-shadow-color)] text-[15vh] text-center w-full tracking-widest`}
+      className={`font-bold drop-shadow-[0_2px_2px_var(--drop-shadow-color)] text-[15vh] w-full tracking-widest text-left`}
       style={
         {
           color: clockColor,
@@ -48,7 +52,7 @@ export function Clock1() {
         } as React.CSSProperties
       }
     >
-      {time}
+      {time || (clockShowSeconds === "true" ? "00:00:00" : "00:00")}
     </div>
   );
 }

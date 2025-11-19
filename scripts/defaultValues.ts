@@ -1,3 +1,8 @@
+// Background
+// https://www.goodfon.com/nature/wallpaper-4k-ultra-hd-background-lake-sunset-sky-dusk-colorful-dark-tr.html
+export const BACKGROUND_KEY__DEFAULT =
+  "https://img.goodfon.com/original/1920x1080/1/74/4k-ultra-hd-background-lake-sunset-sky-dusk-colorful-dark-tr.jpg";
+
 // Search Engine
 export const SEARCH_ENGINE_TEXT_COLOR__DEFAULT = "rgba(255,255,255,1)";
 export const SEARCH_ENGINE_PLACEHOLDER_COLOR__DEFAULT = "rgba(200,200,200,1)";

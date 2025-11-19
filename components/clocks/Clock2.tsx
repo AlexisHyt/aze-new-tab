@@ -1,12 +1,18 @@
 import { useStorage } from "@plasmohq/storage/hook";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { CLOCK_SHADOW_COLOR__DEFAULT } from "~scripts/defaultValues";
+import {
+  CLOCK_SHADOW_COLOR__DEFAULT,
+  CLOCK_SHOW_SECONDS__DEFAULT,
+} from "~scripts/defaultValues";
 import { CLOCK_SHADOW_COLOR, CLOCK_SHOW_SECONDS } from "~scripts/storage";
 
 export function Clock2() {
   const [time, setTime] = useState("");
-  const [clockShowSeconds, _] = useStorage(CLOCK_SHOW_SECONDS, true);
+  const [clockShowSeconds, _] = useStorage(
+    CLOCK_SHOW_SECONDS,
+    CLOCK_SHOW_SECONDS__DEFAULT,
+  );
 
   const [clockShadowColor] = useStorage(
     CLOCK_SHADOW_COLOR,
@@ -39,6 +45,13 @@ export function Clock2() {
   };
 
   const replaceDigitsWithEmojis = (text: string) => {
+    if (!text || text === "") {
+      if (clockShowSeconds === "true") {
+        return "0️⃣0️⃣:0️⃣0️⃣:0️⃣0️⃣";
+      } else {
+        return "0️⃣0️⃣:0️⃣0️⃣";
+      }
+    }
     return text.replace(/[0-9]/g, digitToEmoji);
   };
 
@@ -50,7 +63,7 @@ export function Clock2() {
       const seconds = now.getSeconds().toString().padStart(2, "0");
 
       setTime(
-        clockShowSeconds
+        clockShowSeconds === "true"
           ? `${hours}:${minutes}:${seconds}`
           : `${hours}:${minutes}`,
       );
@@ -61,7 +74,7 @@ export function Clock2() {
 
   return (
     <div
-      className={`font-bold drop-shadow-[0_2px_2px_var(--drop-shadow-color)] text-[10vh] text-center w-full`}
+      className={`font-bold drop-shadow-[0_2px_2px_var(--drop-shadow-color)] text-[10vh] w-full text-left`}
       style={
         {
           color: "#559FF2",

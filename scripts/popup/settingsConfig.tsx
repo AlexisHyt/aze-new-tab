@@ -23,6 +23,7 @@ import {
   strToBool,
 } from "~lib/helpers";
 import {
+  BACKGROUND_KEY__DEFAULT,
   CARD_LINK_BG_COLOR__DEFAULT,
   CARD_LINK_TEXT_COLOR__DEFAULT,
   CATEGORY_BG_COLOR__DEFAULT,
@@ -117,7 +118,7 @@ export const useSettingsConfig = (): ISetting[] => {
     background,
     setBackground,
     { setRenderValue: setBackgroundRenderValue },
-  ] = useStorage(BACKGROUND_KEY, "");
+  ] = useStorage(BACKGROUND_KEY, BACKGROUND_KEY__DEFAULT);
   // Clock
   const [
     clockColor,

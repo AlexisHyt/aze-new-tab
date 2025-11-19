@@ -10,13 +10,17 @@ import { Links } from "~components/Links";
 import { RSSFeed } from "~components/RSSFeed";
 import { Search } from "~components/Search";
 import { useGoogleFonts } from "~node_modules/@flyyer/use-googlefonts";
-import { FONT_FAMILY_KEY__DEFAULT } from "~scripts/defaultValues";
+import {
+  FONT_FAMILY_KEY__DEFAULT,
+  RSS_SHOW__DEFAULT,
+} from "~scripts/defaultValues";
 import type { IGroup } from "~scripts/popup/types";
-import { ACTIVE_GROUP, FONT_FAMILY_KEY } from "~scripts/storage";
+import { ACTIVE_GROUP, FONT_FAMILY_KEY, RSS_ENABLE } from "~scripts/storage";
 
 export default function NewTabPage() {
   const [activeGroup] = useStorage(ACTIVE_GROUP, {} as IGroup);
   const [fontFamily] = useStorage(FONT_FAMILY_KEY, FONT_FAMILY_KEY__DEFAULT);
+  const [rssShow] = useStorage(RSS_ENABLE, RSS_SHOW__DEFAULT);
 
   useGoogleFonts([
     {
@@ -40,13 +44,13 @@ export default function NewTabPage() {
     <>
       <Background />
       <main
-        className={`grid grid-cols-2 gap-5 h-screen overflow-hidden`}
+        className={`grid ${rssShow === "true" ? "grid-cols-2" : "grid-cols-3"} gap-5 h-screen overflow-hidden`}
         style={{ "--font-family": fontFamily } as React.CSSProperties}
       >
         <div
-          className={`px-16 py-8 flex flex-col justify-around gap-5 max-h-screen`}
+          className={`px-16 py-8 ${rssShow === "true" ? "" : "col-span-2"} flex flex-col justify-around gap-5 max-h-screen`}
         >
-          <div className={`h-[40vh] flex flex-col justify-start gap-5 z-50`}>
+          <div className={`h-auto flex flex-col justify-start gap-5 z-50`}>
             <div className={`flex items-center gap-5 z-50`}>
               <Search />
               <GoShortcut />

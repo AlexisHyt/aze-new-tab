@@ -1,7 +1,9 @@
 import { useStorage } from "@plasmohq/storage/hook";
+import { BACKGROUND_KEY__DEFAULT } from "~scripts/defaultValues";
+import { BACKGROUND_KEY } from "~scripts/storage";
 
 export function Background() {
-  const [background, _] = useStorage("background", "");
+  const [background, _] = useStorage(BACKGROUND_KEY, BACKGROUND_KEY__DEFAULT);
 
   return (
     <div
