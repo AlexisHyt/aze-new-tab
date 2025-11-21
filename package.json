@@ -1,7 +1,7 @@
 {
 	"name": "aze-new-tab",
 	"displayName": "Aze New Tab (ANT) - Custom new tab",
-	"version": "2.0.1",
+	"version": "2.1.0",
 	"description": "Customize your new tab page with your shortcuts and your RSS feeds.",
 	"author": "AlexisH <azen0x.alexis@gmail.com>",
 	"scripts": {
@@ -45,6 +45,7 @@
 		"host_permissions": [
 			"https://*/*",
 			"http://*/*"
-		]
+		],
+        "version_name": "2.1.0"
 	}
 }

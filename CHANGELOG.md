@@ -1,4 +1,4 @@
-# 2.0.1
+# 2.1.0
 
 ### Improvements
 ✨ Add a default background image for new users\
